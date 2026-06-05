@@ -235,3 +235,12 @@ CREATE TABLE objetos_perdidos (
 INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Supervisor'), (3, 'Vigilante'), (4, 'Cliente');
 INSERT INTO tipos_novedad (nombre) VALUES ('Accidente'), ('Daño en infraestructura'), ('Queja de residente'), ('Emergencia médica'), ('Vehículo sospechoso'), ('Ruido excesivo');
 INSERT INTO tipos_puesto (nombre) VALUES ('Portería Principal'), ('Portería Vehicular', 'Recepción de Torres', 'Monitoreo de Cámaras (CCTV)', 'Patrullaje Perimetral');
+
+
+-- Elimina el rol cliente si ya lo habías metido
+DELETE FROM roles WHERE id = 4;
+
+-- Tus roles maestros reales quedan así:
+-- id 1 = Administrador
+-- id 2 = Supervisor
+-- id 3 = Vigilante
