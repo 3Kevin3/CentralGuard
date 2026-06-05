@@ -1,1 +1,1 @@
-# CentinelGuard
+# CentralGuard
