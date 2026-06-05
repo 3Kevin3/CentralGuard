@@ -1,34 +1,37 @@
-CREATE DATABASE IF NOT EXISTS sistema_vigilancia_premium;
-USE sistema_vigilancia_premium;
+CREATE DATABASE IF NOT EXISTS sistema_vigilancia_3fn;
+USE sistema_vigilancia_3fn;
 
 -- ========================================================
--- 1. TABLAS MAESTRAS / PARAMÉTRICAS (TIPOS Y ROLES)
+-- CONSTANTES Y TABLAS MAESTRAS (1FN & 2FN CONTROL)
 -- ========================================================
 
 CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE -- Vigilante, Supervisor, Administrador, Cliente
+    nombre VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE tipos_novedad (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(70) NOT NULL UNIQUE -- Accidente, Robo, Falla Eléctrica, Intrusión
+    nombre VARCHAR(70) NOT NULL UNIQUE
 );
 
 CREATE TABLE tipos_puesto (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(70) NOT NULL UNIQUE -- Portería Principal, Parqueadero, Ronda Perimetral, Recepción
+    nombre VARCHAR(70) NOT NULL UNIQUE
 );
 
 -- ========================================================
--- 2. ENTIDADES PRINCIPALES (USUARIOS Y CLIENTES)
+-- CUENTAS DE USUARIO Y CLIENTES INDEPENDIENTES
 -- ========================================================
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    nombre_completo VARCHAR(100) NOT NULL,
+    primer_nombre VARCHAR(50) NOT NULL,
+    segundo_nombre VARCHAR(50) NULL,
+    primer_apellido VARCHAR(50) NOT NULL,
+    segundo_apellido VARCHAR(50) NULL,
     rol_id INT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE RESTRICT
@@ -38,48 +41,50 @@ CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_razon_social VARCHAR(120) NOT NULL,
     nit_identificacion VARCHAR(20) NOT NULL UNIQUE,
-    persona_contacto VARCHAR(100) NOT NULL,
+    contacto_primer_nombre VARCHAR(50) NOT NULL,
+    contacto_primer_apellido VARCHAR(50) NOT NULL,
     correo_electronico VARCHAR(100) NULL,
     fecha_inicio_contrato DATE NOT NULL,
     estado_contrato ENUM('Activo', 'Suspendido', 'Finalizado') DEFAULT 'Activo'
 );
 
 -- ========================================================
--- 3. LOGÍSTICA DE UBICACIONES Y CONTACTOS (NORMALIZACIÓN DE DATOS)
+-- ATOMIZACIÓN ABSOLUTA: DIRECCIONES Y TELÉFONOS (3FN RIGUROSA)
 -- ========================================================
 
--- Tabla independiente para desglosar direcciones físicamente y evitar textos planos mixtos
 CREATE TABLE direcciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     entidad_tipo ENUM('Cliente', 'Empleado', 'Puesto') NOT NULL,
-    entidad_id INT NOT NULL, -- ID del cliente, empleado o puesto correspondiente
-    ciudad VARCHAR(50) NOT NULL DEFAULT 'Bogotá',
-    localidad_barrio VARCHAR(80) NOT NULL,
-    nomenclatura_via VARCHAR(150) NOT NULL, -- Ej: Calle 45 # 12 - 34
-    detalles_adicionales VARCHAR(100) NULL  -- Ej: Torre 2 Administración
+    entidad_id INT NOT NULL,
+    departamento VARCHAR(50) NOT NULL DEFAULT 'Risaralda',
+    ciudad VARCHAR(50) NOT NULL DEFAULT 'Pereira',
+    barrio_localidad VARCHAR(80) NOT NULL,
+    tipo_via ENUM('Calle', 'Carrera', 'Avenida', 'Diagonal', 'Transversal', 'Circular') NOT NULL,
+    numero_via VARCHAR(20) NOT NULL,      -- Ej: "45"
+    numero_placa VARCHAR(30) NOT NULL,    -- Ej: "# 12 - 34"
+    complemento_interior VARCHAR(60) NULL -- Ej: "Torre 2 Apto 501"
 );
 
--- Tabla independiente para teléfonos para soportar múltiples líneas por entidad
 CREATE TABLE telefonos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     entidad_tipo ENUM('Cliente', 'Empleado', 'Emergencia') NOT NULL,
     entidad_id INT NOT NULL,
-    numero_telefono VARCHAR(20) NOT NULL,
+    indicador_pais VARCHAR(5) DEFAULT '+57',
+    numero_marcado VARCHAR(15) NOT NULL,
     tipo_linea ENUM('Celular', 'Fijo', 'Corporativo', 'PBX') DEFAULT 'Celular'
 );
 
--- Puestos de vigilancia físicos vinculados a un Cliente
 CREATE TABLE puestos_vigilancia (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
     tipo_puesto_id INT NOT NULL,
-    nombre_identificador VARCHAR(100) NOT NULL, -- Ej: Portería Vehicular Norte
+    nombre_identificador VARCHAR(100) NOT NULL,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
     FOREIGN KEY (tipo_puesto_id) REFERENCES tipos_puesto(id) ON DELETE RESTRICT
 );
 
 -- ========================================================
--- 4. GESTIÓN ADMINISTRATIVA Y HOJAS DE VIDA (EMPLEADOS)
+-- TALENTO HUMANO Y EXPEDIENTES
 -- ========================================================
 
 CREATE TABLE empleados (
@@ -105,21 +110,21 @@ CREATE TABLE advertencias_disciplinarias (
 CREATE TABLE evaluaciones_desempeno (
     id INT AUTO_INCREMENT PRIMARY KEY,
     empleado_id INT NOT NULL,
-    evaluador_id INT NOT NULL, -- ID del Administrador o Supervisor que evalúa
+    evaluador_id INT NOT NULL,
     fecha_evaluacion DATE NOT NULL,
-    puntaje_numerico INT NOT NULL, -- Rango de 1 a 100 o de 1 a 5
+    puntaje_numerico INT NOT NULL,
     comentarios_retroalimentacion TEXT NULL,
     FOREIGN KEY (empleado_id) REFERENCES empleados(id) ON DELETE CASCADE,
     FOREIGN KEY (evaluador_id) REFERENCES usuarios(id) ON DELETE RESTRICT
 );
 
 -- ========================================================
--- 5. LOGÍSTICA DE EQUIPOS E INVENTARIO
+-- LOGÍSTICA DE LOGS DE HARDWARE
 -- ========================================================
 
 CREATE TABLE equipos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_activo VARCHAR(100) NOT NULL, -- Ej: Radio Motorola XTS, Linterna LED Tactica
+    nombre_activo VARCHAR(100) NOT NULL,
     serial_unico VARCHAR(50) NOT NULL UNIQUE,
     estado_equipo ENUM('Excelente', 'Bueno', 'Regular', 'Deficiente', 'En Mantenimiento') DEFAULT 'Excelente'
 );
@@ -127,16 +132,16 @@ CREATE TABLE equipos (
 CREATE TABLE asignaciones_equipo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     equipo_id INT NOT NULL,
-    responsable_id INT NOT NULL, -- Usuario que recibe la dotación
+    responsable_id INT NOT NULL,
     fecha_entrega DATETIME NOT NULL,
-    fecha_devolucion DATETIME NULL, -- Nulo mientras el equipo esté en su poder
+    fecha_devolucion DATETIME NULL,
     observaciones_entrega VARCHAR(255) NULL,
     FOREIGN KEY (equipo_id) REFERENCES equipos(id) ON DELETE RESTRICT,
     FOREIGN KEY (responsable_id) REFERENCES usuarios(id) ON DELETE RESTRICT
 );
 
 -- ========================================================
--- 6. OPERACIÓN DE CONTROL DE CAMPO Y TURNOS
+-- OPERACIÓN DIARIA Y CONTROL DE FRONTERAS
 -- ========================================================
 
 CREATE TABLE turnos (
@@ -158,20 +163,19 @@ CREATE TABLE rondas (
     turno_id INT NOT NULL,
     hora_marcacion_inicio TIME NOT NULL,
     hora_marcacion_fin TIME NOT NULL,
-    puntos_validados VARCHAR(255) NOT NULL, -- Ej: Puntos de control de ronda 1 al 5
+    puntos_validados VARCHAR(255) NOT NULL,
     observaciones_ronda TEXT NULL,
     FOREIGN KEY (turno_id) REFERENCES turnos(id) ON DELETE CASCADE
 );
 
--- ========================================================
--- 7. REGISTRO DE ACCESOS (CONTROL DE VISITANTES Y VEHÍCULOS)
--- ========================================================
-
 CREATE TABLE visitantes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_completo VARCHAR(100) NOT NULL,
+    primer_nombre VARCHAR(50) NOT NULL,
+    segundo_nombre VARCHAR(50) NULL,
+    primer_apellido VARCHAR(50) NOT NULL,
+    segundo_apellido VARCHAR(50) NULL,
     documento_identidad VARCHAR(25) NOT NULL UNIQUE,
-    empresa_procedencia VARCHAR(100) NULL -- Para contratistas o domiciliarios (Ej: Rappi, Servientrega)
+    empresa_procedencia VARCHAR(100) NULL
 );
 
 CREATE TABLE vehiculos (
@@ -185,7 +189,7 @@ CREATE TABLE registro_accesos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     turno_id INT NOT NULL,
     visitante_id INT NOT NULL,
-    vehiculo_id INT NULL, -- Puede ser NULL si el ingreso es netamente peatonal
+    vehiculo_id INT NULL,
     apartamento_destino VARCHAR(30) NOT NULL,
     tipo_ingreso ENUM('Residente', 'Visitante', 'Domiciliario', 'Proveedor', 'Contratista') NOT NULL,
     hora_entrada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -197,7 +201,7 @@ CREATE TABLE registro_accesos (
 );
 
 -- ========================================================
--- 8. NOVEDADES Y OBJETOS PERDIDOS
+-- NOVEDADES Y RESGUARDOS EN PORTERÍA
 -- ========================================================
 
 CREATE TABLE novedades (
@@ -214,14 +218,14 @@ CREATE TABLE novedades (
 CREATE TABLE evidencias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     novedad_id INT NOT NULL,
-    url_archivo_evidencia VARCHAR(255) NOT NULL, -- Enlace a la foto o video almacenado
+    url_archivo_evidencia VARCHAR(255) NOT NULL,
     fecha_captura TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (novedad_id) REFERENCES novedades(id) ON DELETE CASCADE
 );
 
 CREATE TABLE objetos_perdidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    puesto_vigilancia_id INT NOT NULL, -- Dónde se encontró o reportó el objeto
+    puesto_vigilancia_id INT NOT NULL,
     nombre_objeto VARCHAR(100) NOT NULL,
     descripcion_detallada TEXT NULL,
     fecha_hallazgo DATE NOT NULL,
@@ -230,17 +234,8 @@ CREATE TABLE objetos_perdidos (
 );
 
 -- ========================================================
--- DATOS MAESTROS INICIALES OBLIGATORIOS (SEEDS)
+-- INSERT DE DATOS SEMILLA SEGUROS (SÓLO EMPLEADOS OPERATIVOS)
 -- ========================================================
-INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Supervisor'), (3, 'Vigilante'), (4, 'Cliente');
+INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Supervisor'), (3, 'Vigilante');
 INSERT INTO tipos_novedad (nombre) VALUES ('Accidente'), ('Daño en infraestructura'), ('Queja de residente'), ('Emergencia médica'), ('Vehículo sospechoso'), ('Ruido excesivo');
-INSERT INTO tipos_puesto (nombre) VALUES ('Portería Principal'), ('Portería Vehicular', 'Recepción de Torres', 'Monitoreo de Cámaras (CCTV)', 'Patrullaje Perimetral');
-
-
--- Elimina el rol cliente si ya lo habías metido
-DELETE FROM roles WHERE id = 4;
-
--- Tus roles maestros reales quedan así:
--- id 1 = Administrador
--- id 2 = Supervisor
--- id 3 = Vigilante
+INSERT INTO tipos_puesto (nombre) VALUES ('Portería Principal'), ('Portería Vehicular'), ('Recepción de Torres'), ('Monitoreo de Cámaras (CCTV)'), ('Patrullaje Perimetral');
