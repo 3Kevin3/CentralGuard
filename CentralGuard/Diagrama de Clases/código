@@ -1,0 +1,80 @@
+@startuml
+
+class ClienteConjunto {
+    - idclientes : int
+    - nombre_conjunto : string
+    - nit_identificacion : string
+    - contacto_nombre_completo : string
+    - correo_electronico : string
+    - fecha_inicio_contrato : date
+    - estado_contrato : string
+    + registrarCliente()
+    + consultarCliente()
+    + eliminarCliente()
+}
+
+class PuestoVigilancia {
+    - idpuestos_vigilancia : int
+    - nombre_identificador : string
+    + crearPuesto()
+    + consultarPuesto()
+}
+
+class Turno {
+    - idturnos : int
+    - fecha : date
+    - hora_inicio : time
+    - hora_fin : time
+    - estado_turno : string
+    + registrarTurno()
+    + editarTurno()
+    + consultarTurno()
+}
+
+class Usuario {
+    - idusuarios : int
+    - usuario : string
+    - contrasenia : string
+    - nombre_completo : string
+    - fecha_creacion : timestamp
+    + validarLogin()
+    + crearUsuario()
+}
+
+class Empleado {
+    - idempleados : int
+    - documento_identidad : string
+    - fecha_nacimiento : date
+    - historial_laboral : string
+    - reconocimientos : string
+    + registrarEmpleado()
+    + consultarEmpleado()
+}
+
+class Novedades {
+    - idnovedades : int
+    - hora_reporte : time
+    - descripcion_hechos : string
+    - estado_novedad : string
+    + crearNovedad()
+    + consultarNovedad()
+}
+
+class TiposNovedad {
+    - idtipos_novedad : int
+    - nombre : string
+    + crearTipo()
+}
+
+
+
+ClienteConjunto "1" *-- "1*" PuestoVigilancia : posee >
+PuestoVigilancia "1" <-- "1*" Turno : se asigna en <
+
+Usuario "1" <-- "1*" Turno : cubre (Vigilante / Supervisor) <
+Usuario "1" -- "1" Empleado : posee un >
+
+Turno "1" <-- "1*" Novedades : reporta durante <
+TiposNovedad "1" <-- "1*" Novedades : clasifica a <
+
+@enduml
