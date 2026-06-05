@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Seguridad - Panel de Control</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-shield-halved logo-icon"></i>
+                <h2>BogotáSegur</h2>
+            </div>
+            
+            <div class="user-context">
+                <span class="badge" id="role-badge">Administrador</span>
+                <p id="user-display-name">Cargando usuario...</p>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active" data-target="vista-inicio">
+                        <i class="fa-solid fa-house"></i> <span>Inicio</span>
+                    </li>
+                    <li data-target="vista-accesos">
+                        <i class="fa-solid fa-id-card"></i> <span>Registro de Accesos</span>
+                    </li>
+                    <li data-target="vista-novedades">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <span>Novedades</span>
+                    </li>
+                    <li data-target="vista-rondas">
+                        <i class="fa-solid fa-route"></i> <span>Rondas y Minutas</span>
+                    </li>
+                    <li data-target="vista-config">
+                        <i class="fa-solid fa-gear"></i> <span>Configuración</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="toggle-sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <div class="navbar-right">
+                    <div class="date-time-display" id="live-clock">Cargando fecha...</div>
+                    <div class="profile-circle"><i class="fa-solid fa-user"></i></div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                
+                <section id="vista-inicio" class="content-section active-section">
+                    <div class="section-header">
+                        <h1>Bienvenido al Panel de Control</h1>
+                        <p>Resumen general del estado de la seguridad y operaciones actuales.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-users text-blue"></i>
+                            <div><h3>42</h3><p>Accesos Hoy</p></div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-circle-exclamation text-amber"></i>
+                            <div><h3>3</h3><p>Novedades Activas</p></div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-clipboard-check text-green"></i>
+                            <div><h3>100%</h3><p>Rondas Cumplidas</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vista-accesos" class="content-section">
+                    <div class="section-header">
+                        <h1>Control y Registro de Accesos</h1>
+                        <p>Gestión en tiempo real de residentes, visitantes, contratistas y vehículos.</p>
+                    </div>
+
+                    <div class="card form-card">
+                        <h3><i class="fa-solid fa-user-plus"></i> Registrar Nuevo Ingreso</h3>
+                        <form id="form-acceso" class="grid-form">
+                            <div class="form-group">
+                                <label for="doc-visitante">Documento Identidad *</label>
+                                <input type="text" id="doc-visitante" required placeholder="Cédula o pasaporte">
+                            </div>
+                            <div class="form-group">
+                                <label for="nom-visitante">Nombre Completo *</label>
+                                <input type="text" id="nom-visitante" required placeholder="Nombres y apellidos">
+                            </div>
+                            <div class="form-group">
+                                <label for="tipo-ingreso">Tipo de Ingreso *</label>
+                                <select id="tipo-ingreso" required>
+                                    <option value="Visitante">Visitante</option>
+                                    <option value="Residente">Residente</option>
+                                    <option value="Domiciliario">Domiciliario</option>
+                                    <option value="Contratista">Contratista</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="apto-destino">Apto / Torre Destino *</label>
+                                <input type="text" id="apto-destino" required placeholder="Ej: Torre 2 - Apto 401">
+                            </div>
+                            <div class="form-group">
+                                <label for="placa-vehiculo">Placa Vehículo (Opcional)</label>
+                                <input type="text" id="placa-vehiculo" placeholder="Ej: XYZ123">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="obs-acceso">Observaciones de Entrada</label>
+                                <textarea id="obs-acceso" rows="2" placeholder="Detalles o elementos con los que ingresa..."></textarea>
+                            </div>
+                            <div class="form-actions full-width">
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Entrada</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card table-card">
+                        <h3><i class="fa-solid fa-list-check"></i> Bitácora de Movimientos Recientes</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Visitante / Documento</th>
+                                        <th>Tipo</th>
+                                        <th>Destino</th>
+                                        <th>Vehículo</th>
+                                        <th>Ingreso</th>
+                                        <th>Salida</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-accesos-body">
+                                    <tr>
+                                        <td><strong>Carlos Mendoza</strong><br><small class="text-muted">1.014.234.567</small></td>
+                                        <td><span class="tag tag-visitante">Visitante</span></td>
+                                        <td>Torre 1 - 302</td>
+                                        <td><span class="text-muted">A pie</span></td>
+                                        <td>05/06/2026 14:20</td>
+                                        <td><span class="badge badge-pending">En Sitio</span></td>
+                                        <td><button class="btn btn-sm btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Salida</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vista-novedades" class="content-section">
+                    <div class="section-header">
+                        <h1>Reporte y Control de Novedades</h1>
+                        <p>Registro inmediato de contingencias y anomalías en los puestos de vigilancia.</p>
+                    </div>
+                    
+                    <div class="card form-card">
+                        <h3><i class="fa-solid fa-bullhorn"></i> Crear Reporte de Novedad</h3>
+                        <form id="form-novedad" class="grid-form">
+                            <div class="form-group">
+                                <label for="tipo-nov">Clasificación Novedad *</label>
+                                <select id="tipo-nov" required>
+                                    <option value="1">Hurto / Intento de Hurto</option>
+                                    <option value="2">Falla de Infraestructura</option>
+                                    <option value="3">Alteración del Orden</option>
+                                    <option value="4">Asistencia Médica</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gravedad-nov">Nivel de Gravedad *</label>
+                                <select id="gravedad-nov" required>
+                                    <option value="Leve">Leve</option>
+                                    <option value="Moderado">Moderado</option>
+                                    <option value="Grave">Grave</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="desc-nov">Descripción Detallada de los Hechos *</label>
+                                <textarea id="desc-nov" rows="4" required placeholder="Escriba de forma detallada qué sucedió, quiénes intervinieron y qué medidas preventivas se tomaron..."></textarea>
+                            </div>
+                            <div class="form-actions full-width">
+                                <button type="submit" class="btn btn-amber"><i class="fa-solid fa-triangle-exclamation"></i> Registrar Alerta</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="vista-rondas" class="content-section">
+                    <div class="section-header">
+                        <h1>Seguimiento de Rondas y Minuta Digital</h1>
+                        <p>Historial de marcación de puntos de control por huella o tag RFID de los vigilantes.</p>
+                    </div>
+                    <div class="card table-card">
+                        <h3><i class="fa-solid fa-route"></i> Puntos de Control Validados en Turno</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID Ronda</th>
+                                        <th>Hora Inicio</th>
+                                        <th>Hora Fin</th>
+                                        <th>Puntos Validados</th>
+                                        <th>Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#RND-8942</td>
+                                        <td>18:00:00</td>
+                                        <td>18:45:00</td>
+                                        <td><span class="text-green">Sótano 1, Portería, Bloque B (3/3)</span></td>
+                                        <td>Sin novedades físicas en la infraestructura.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vista-config" class="content-section">
+                    <div class="section-header">
+                        <h1>Configuración del Sistema</h1>
+                        <p>Gestión de parámetros maestros y variables operacionales del entorno local.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Información de Conexión Local</h3>
+                        <p class="text-muted">Servidor Backend: <strong class="text-green">http://localhost:3000</strong></p>
+                        <p class="text-muted">Base de Datos: <strong>DB_SistemaSeguridad (MySQL)</strong></p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

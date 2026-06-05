@@ -1,0 +1,381 @@
+/* =====================================================================
+   ESTILOS GENERALES Y VARIABLES (Diseño UI Moderno)
+   ===================================================================== */
+:root {
+    --bg-main: #f4f6f9;
+    --bg-sidebar: #1e293b;
+    --sidebar-text: #94a3b8;
+    --sidebar-active: #ffffff;
+    --sidebar-active-bg: #334155;
+    --text-color: #334155;
+    --white: #ffffff;
+    --border-color: #e2e8f0;
+    
+    /* Paleta de estados corporativos */
+    --primary: #2563eb;
+    --amber: #d97706;
+    --green: #16a34a;
+    --danger: #dc2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* CONTENEDOR DE LA SPA */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =====================================================================
+   BARRA LATERAL (SIDEBAR)
+   ===================================================================== */
+.sidebar {
+    width: 260 bounds;
+    background-color: var(--bg-sidebar);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #2e3e56;
+}
+
+.logo-icon {
+    font-size: 1.6rem;
+    color: var(--white);
+}
+
+.sidebar-header h2 {
+    font-size: 1.25rem;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.user-context {
+    padding: 15px 20px;
+    background-color: #111827;
+    margin: 15px;
+    border-radius: 8px;
+}
+
+.badge {
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+#user-display-name {
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* MENÚ DE NAVEGACIÓN */
+.sidebar-menu {
+    flex-grow: 1;
+    padding: 0 10px;
+}
+
+.sidebar-menu ul {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu li:hover {
+    background-color: var(--sidebar-active-bg);
+    color: var(--white);
+}
+
+.sidebar-menu li.active {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #2e3e56;
+}
+
+#btn-logout {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #475569;
+    color: #f1f5f9;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#btn-logout:hover {
+    background-color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* =====================================================================
+   CONTENIDO PRINCIPAL Y NAVBAR
+   ===================================================================== */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 260px);
+}
+
+.navbar {
+    height: 60px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+}
+
+.toggle-sidebar {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.date-time-display {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.profile-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+}
+
+.content-body {
+    padding: 25px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* CONTROL DE VISTAS VISIBLES/OCULTAS */
+.content-section {
+    display: none;
+}
+
+.content-section.active-section {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+.section-header {
+    margin-bottom: 25px;
+}
+
+.section-header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Tarjetas base de los paneles */
+.card {
+    background-color: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =====================================================================
+   FORMULARIOS REUTILIZABLES (GRID LAYOUT)
+   ===================================================================== */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    background-color: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* BOTONES */
+.btn {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary { background-color: var(--primary); color: var(--white); }
+.btn-primary:hover { background-color: #1d4ed8; }
+.btn-amber { background-color: var(--amber); color: var(--white); }
+.btn-amber:hover { background-color: #b45309; }
+.btn-danger { background-color: var(--danger); color: var(--white); }
+
+.btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; }
+
+/* =====================================================================
+   TABLAS RESPONSIVAS
+   ===================================================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+table th {
+    background-color: #f8fafc;
+    padding: 12px;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 2px solid var(--border-color);
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+/* INDICADORES / TAGS COINCIDENTES */
+.tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+.tag-visitante { background-color: #dbeafe; color: #1e40af; }
+
+.badge-pending { background-color: #fef3c7; color: #92400e; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px;}
+
+/* GRIDS DE INICIO */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+.stat-card {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.stat-card i { font-size: 2rem; }
+.text-blue { color: var(--primary); }
+.text-amber { color: var(--amber); }
+.text-green { color: var(--green); }
+.text-muted { color: #64748b; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
