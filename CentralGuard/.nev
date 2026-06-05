@@ -1,0 +1,6 @@
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=sistema_vigilancia_saas
+JWT_SECRET=secreto_corporativo_para_saas_2026
+PORT=3000
