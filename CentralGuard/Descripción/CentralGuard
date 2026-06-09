@@ -1,0 +1,265 @@
+Sistema de Gestión y Control de Vigilancia para Conjuntos Residenciales
+
+Descripción General
+
+El sistema tiene como objetivo facilitar la gestión operativa de los servicios de vigilancia en conjuntos residenciales. La plataforma permitirá registrar rondas de seguridad, controlar el ingreso y salida de visitantes y vehículos, gestionar novedades, supervisar al personal de vigilancia y administrar los recursos humanos y operativos de la empresa de seguridad.
+
+El sistema contará con tres roles principales: Vigilante, Supervisor y Administrador.
+
+
+
+1. Rol: Vigilante
+
+El vigilante será responsable de registrar las actividades operativas realizadas durante su turno.
+
+1.1 Libro de Rondas
+
+Permitirá registrar cada ronda realizada dentro del conjunto residencial.
+
+Información registrada:
+
+Fecha
+Hora de inicio de la ronda
+Hora de finalización
+Nombre del vigilante
+Sector recorrido
+Observaciones
+
+
+1.2 Registro de Ingreso y Salida de Personas y Vehículos
+
+Permitirá controlar el acceso al conjunto residencial.
+
+Información registrada:
+
+Nombre de la persona
+Número de identificación
+Placa del vehículo (si aplica)
+Apartamento o casa visitada
+Tipo de ingreso:
+
+Residente
+Visitante
+Domiciliario
+Proveedor
+Contratista
+Hora de entrada
+Hora de salida
+Observaciones
+
+
+1.3 Registro de Novedades
+
+El vigilante podrá reportar cualquier situación ocurrida durante el turno.
+
+Información registrada:
+
+Fecha
+Hora
+Tipo de novedad
+Descripción
+Evidencia fotográfica
+Estado de la novedad
+Tipos de novedad:
+
+Seguridad
+Accidente
+Daño en infraestructura
+Queja de residente
+Emergencia médica
+Vehículo sospechoso
+Ruido excesivo
+Otro
+
+
+1.4 Objetos Perdidos
+
+Permitirá registrar objetos encontrados dentro del conjunto.
+
+Información registrada:
+
+Objeto encontrado
+Lugar donde fue encontrado
+Fecha
+Descripción
+Fotografía
+Estado:
+
+Encontrado
+Entregado
+En custodia
+
+
+2. Rol: Supervisor
+
+El supervisor será responsable del monitoreo y control operativo del personal de vigilancia.
+
+2.1 Monitoreo de Vigilantes
+
+Visualización en tiempo real de la ubicación operativa de cada vigilante.
+
+Ejemplo:
+
+Portería Principal
+Torre A
+Torre B
+Parqueadero
+Zona Social
+Piscina
+Senderos Peatonales
+
+
+2.2 Gestión de Novedades
+
+Visualización inmediata de todas las novedades reportadas por los vigilantes.
+
+Funciones:
+
+Consultar novedades
+Filtrar por fecha
+Filtrar por vigilante
+Cambiar estado:
+
+Pendiente
+En proceso
+Resuelta
+
+
+2.3 Panel de Cumplimiento
+
+Indicadores operativos del personal.
+
+Información mostrada:
+
+Rondas realizadas
+Rondas pendientes
+Llegadas tarde
+Ausencias
+Novedades registradas
+Incidentes reportados
+
+
+2.4 Chat Interno
+
+Canal de comunicación entre:
+
+Supervisor ↔ Administrador
+Permite compartir instrucciones, reportes y novedades operativas.
+
+
+
+3. Rol: Administrador
+
+El administrador tendrá control total sobre la operación y el personal.
+
+3.1 Gestión de Personal
+
+Administración de la información laboral de los trabajadores.
+
+Hoja de Vida del Empleado
+
+Nombre completo
+Documento de identidad
+Cargo
+Fecha de ingreso
+Teléfono
+Dirección
+Historial laboral
+Advertencias
+Reconocimientos
+
+
+3.2 Gestión de Advertencias
+
+Registro disciplinario de cada trabajador.
+
+Información registrada:
+
+Fecha
+Motivo
+Descripción
+Nivel:
+
+Leve
+Moderado
+Grave
+
+
+3.3 Programación de Turnos
+
+Calendario para asignación de personal.
+
+Información registrada:
+
+Vigilante asignado
+Supervisor responsable
+Fecha
+Hora de inicio
+Hora de finalización
+Puesto de trabajo
+Tipos de puesto:
+
+Portería principal
+Portería secundaria
+Recepción
+Parqueadero
+Torre residencial
+Zona social
+Piscina
+Ronda perimetral
+
+
+3.4 Gestión de Clientes
+
+Registro de los conjuntos residenciales administrados.
+
+Información registrada:
+
+Nombre del conjunto residencial
+Dirección
+Ciudad
+Persona de contacto
+Teléfono
+Correo electrónico
+Fecha de inicio del contrato
+Estado del contrato
+
+
+3.5 Control de Uniformes y Equipos
+
+Asignación de recursos al personal.
+
+Equipos controlados:
+
+Radio de comunicación
+Linterna
+Uniforme
+Bastón de seguridad
+Chaleco reflectivo
+Llaves
+Dispositivo móvil
+Información registrada:
+
+Equipo asignado
+Fecha de entrega
+Estado
+Responsable
+
+
+3.6 Evaluación de Desempeño
+
+Calificación automática del personal.
+
+Criterios:
+
+Puntualidad
+Rondas completadas
+Cumplimiento de turnos
+Novedades registradas
+Advertencias recibidas
+Resultado:
+
+Excelente
+Bueno
+Regular
+Deficiente
