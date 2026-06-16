@@ -135,10 +135,9 @@ Consultar novedades
 Filtrar por fecha
 Filtrar por vigilante
 Cambiar estado:
-
-Pendiente
-En proceso
-Resuelta
+-Pendiente
+-En proceso
+-Resuelta
 
 
 2.3 Panel de Cumplimiento
@@ -152,7 +151,6 @@ Rondas pendientes
 Llegadas tarde
 Ausencias
 Novedades registradas
-Incidentes reportados
 
 
 2.4 Chat Interno
@@ -195,10 +193,9 @@ Fecha
 Motivo
 Descripción
 Nivel:
-
-Leve
-Moderado
-Grave
+-Leve
+-Moderado
+-Grave
 
 
 3.3 Programación de Turnos
@@ -225,35 +222,19 @@ Piscina
 Ronda perimetral
 
 
-3.4 Gestión de Clientes
-
-Registro de los conjuntos residenciales administrados.
-
-Información registrada:
-
-Nombre del conjunto residencial
-Dirección
-Ciudad
-Persona de contacto
-Teléfono
-Correo electrónico
-Fecha de inicio del contrato
-Estado del contrato
-
-
-3.5 Control de Uniformes y Equipos
+3.4 Control de Uniformes y Equipos
 
 Asignación de recursos al personal.
 
 Equipos controlados:
+-Radio de comunicación
+-Linterna
+-Uniforme
+-Bastón de seguridad
+-Chaleco reflectivo
+-Llaves
+-Dispositivo móvil
 
-Radio de comunicación
-Linterna
-Uniforme
-Bastón de seguridad
-Chaleco reflectivo
-Llaves
-Dispositivo móvil
 Información registrada:
 
 Equipo asignado
@@ -262,20 +243,3 @@ Estado
 Responsable
 
 
-3.6 Evaluación de Desempeño
-
-Calificación automática del personal.
-
-Criterios:
-
-Puntualidad
-Rondas completadas
-Cumplimiento de turnos
-Novedades registradas
-Advertencias recibidas
-Resultado:
-
-Excelente
-Bueno
-Regular
-Deficiente
