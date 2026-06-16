@@ -37,12 +37,9 @@ Número de identificación
 Placa del vehículo (si aplica)
 Apartamento o casa visitada
 Tipo de ingreso:
-
-Residente
-Visitante
-Domiciliario
-Proveedor
-Contratista
+-Residente
+-Visitante
+-Domiciliario
 Hora de entrada
 Hora de salida
 Observaciones
@@ -56,20 +53,27 @@ Información registrada:
 
 Fecha
 Hora
-Tipo de novedad
 Descripción
 Evidencia fotográfica
-Estado de la novedad
-Tipos de novedad:
+Prioridad:
+-Baja
+-Media
+-Alta
 
-Seguridad
-Accidente
-Daño en infraestructura
-Queja de residente
-Emergencia médica
-Vehículo sospechoso
-Ruido excesivo
-Otro
+Estado de la novedad:
+-Pendiente
+-En Proceso
+-Resuelto
+
+Tipos de novedad:
+-Seguridad
+-Accidente
+-Daño en infraestructura
+-Queja de residente
+-Emergencia médica
+-Vehículo sospechoso
+-Ruido excesivo
+-Otro
 
 
 1.4 Objetos Perdidos
@@ -84,11 +88,23 @@ Fecha
 Descripción
 Fotografía
 Estado:
+-Entregado a propietario
+-En custodia
+-Desechado/Donado
 
-Encontrado
-Entregado
-En custodia
+1.5 Pedidos
 
+Permitirá registrar los pedidos recientes a la hora exacta de llegada. 
+
+Nombre pedido
+ID Pedido
+Descripción
+Nombre persona destinatario 
+Hora llegada
+Estado:
+-Entregado a propietario
+-En custodia
+-Desechado/Donado
 
 2. Rol: Supervisor
 
