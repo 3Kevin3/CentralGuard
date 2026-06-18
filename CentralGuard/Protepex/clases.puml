@@ -1,0 +1,70 @@
+
+@startuml
+class Cliente{
+    -documentoCliente : string
+    -nombreCliente : string
+    -apellidoCliente : string
+    -correoCliente : string
+    -telefonoCliente : string
+    +registrarCliente()
+    +consultarCliente()
+    +eliminarCliente()
+    +reporteCliente() 
+}
+
+class Asignacion{
+    -codigoAsignacion : int
+    -fechaAsignacion : date
+    -puestoAsignacion : string
+    -horaEntradaAsignacion : time
+    -horaSalidaAsignacion : time
+    +asignarProducto()
+    +editarAsignacion()
+    +eliminarAsignacion()
+    +consultarAsignacion()
+    +reporteAsignacion()
+}
+
+class Empleado{
+    -documentoEmpleado : string
+    -nombreEmpleado : string
+    -telefonoEmpleado : string
+    -apellidoEmpleado : string
+    -correoEmpleado : string
+    -cargoEmpleado : string
+    +crearEmpleado()
+    +editarEmpleado()
+    +registrarEmpleado()
+    +consultarEmpleado()
+    +eliminarEmpleado()
+    +reporteEmpleado() 
+}
+
+class Novedades{
+    -codigoNovedad : int
+    -fechaNovedad : date
+    -horaNovedad : time
+    -descripcionNovedad : string
+    +crearNovedad()
+    +editarNovedad()
+    +consultarNovedad()
+    +eliminarNovedad()
+    +reporteNovedad() 
+}
+
+class TipoNovedad{
+    -codigoTipoNovedad : int
+    -nombreTipoNovedad : string
+    +crearTipoNovedad()
+    +editarTipoNovedad()
+    +consultarTipoNovedad()
+    +eliminarTipoNovedad()
+    +reporteTipoNovedad() 
+}
+
+Cliente "1" --> "1*" Asignacion : > Registra
+Asignacion "1*" --> "1" Empleado : > Corresponde
+Empleado "1" --> "1*" Novedades : > Registra
+Asignacion "1" --o "1*" Novedades : > Pertenece
+Novedades "1" --|> "1" TipoNovedad : > Pertenece
+@enduml
