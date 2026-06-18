@@ -1,0 +1,267 @@
+@startuml
+
+
+class Roles {
+  +idroles: int
+  +nombre_rol: varchar
+
+  +crearRol()
+  +editarRol()
+}
+
+class Usuarios {
+  +idusuario: int
+  +usuario: varchar
+  +contraseña: varchar
+  +nombre_completo: varchar
+  +fecha_creacion: timestamp
+
+  +iniciarSesion()
+  +cerrarSesion()
+}
+
+class Empleado {
+  +idempleado: int
+  +documento_identidad: varchar
+  +fecha_nacimiento: date
+  +historial_laboral: text
+  +reconocimientos: text
+
+  +actualizarPerfil()
+}
+
+class Contrato {
+  +idcontrato: int
+  +fecha_inicio: date
+  +fecha_fin: date
+  +valor_mensual: decimal
+  +terminos_condiciones: text
+
+  +renovarContrato()
+  +finalizarContrato()
+}
+
+class Evaluacion_desempeno {
+  +idevaluacion: int
+  +fecha_evaluacion: date
+  +puntaje_numerico: int
+  +comentarios: varchar
+
+  +registrarEvaluacion()
+}
+
+class Advertencia_disciplinaria {
+  +idadvertencia: int
+  +fecha: date
+  +motivo: varchar
+  +descripcion: text
+  +nivel_gravedad: enum
+
+  +registrarAdvertencia()
+}
+
+class Conjunto {
+  +idconjunto: int
+  +nombre_conjunto: varchar
+  +nit_identificacion: varchar
+  +contacto_nombre_completo: varchar
+  +direccion: varchar
+  +correo_electronico: varchar
+
+  +actualizarDatos()
+}
+
+class Tipo_telefono {
+  +idtipo_telefono: int
+  +nombre_tipo: varchar
+}
+
+class Telefono {
+  +idtelefono: int
+  +numero_contacto: varchar
+
+  +validarNumero()
+}
+
+class Tipo_puesto {
+  +idtipo_puesto: int
+  +nombre_tipo: varchar
+}
+
+class Puesto_vigilancia {
+  +idpuesto_vigilancia: int
+  +nombre_identificador: varchar
+
+  +asignarVigilante()
+}
+
+class Turno {
+  +idturno: int
+  +fecha: date
+  +hora_inicio: time
+  +hora_fin: time
+
+  +iniciarTurno()
+  +finalizarTurno()
+}
+
+class Ronda {
+  +idronda: int
+  +hora_marcacion_inicio: time
+  +hora_marcacion_fin: time
+  +puntos_validados: varchar
+  +observaciones_ronda: text
+
+  +registrarRonda()
+}
+
+class Persona_acceso {
+  +idpersona_acceso: int
+  +primer_nombre: varchar
+  +primer_apellido: varchar
+  +documento: varchar
+  +tipo_persona: enum
+  +empresa_procedencia: varchar
+
+  +registrarVisitante()
+}
+
+class Vehiculo {
+  +idvehiculo: int
+  +placa: varchar
+  +marca_modelo: varchar
+  +color: varchar
+
+  +registrarVehiculo()
+}
+
+class Vehiculos_personas {
+  +id_vehiculo_persona: int
+  +es_conductor_principal: boolean
+}
+
+class Registro_acceso {
+  +idregistro_acceso: int
+  +apartamento_destino: varchar
+  +hora_entrada: timestamp
+  +hora_salida: timestamp
+  +observaciones: text
+
+  +registrarEntrada()
+  +registrarSalida()
+}
+
+class Pedido {
+  +idpedido: int
+  +nombre_pedido: varchar
+  +descripcion: text
+  +nombre_destinatario: varchar
+  +hora_llegada: timestamp
+
+  +registrarPedido()
+  +entregarPedido()
+}
+
+class Tipos_novedad {
+  +idtipo_novedad: int
+  +nombre_tipo: varchar
+}
+
+class Novedades {
+  +idnovedades: int
+  +hora_reporte: time
+  +descripcion_hechos: text
+
+  +crearNovedad()
+}
+
+class Evidencia {
+  +idevidencia: int
+  +url_imagen_evidencia: varchar
+  +fecha_captura: timestamp
+
+  +adjuntarEvidencia()
+}
+
+class Objeto_perdido {
+  +idobjeto_perdido: int
+  +nombre_objeto: varchar
+  +descripcion_detallada: text
+  +fecha_hallazgo: varchar
+
+  +registrarHallazgo()
+}
+
+class Equipo {
+  +idequipo: int
+  +nombre_activo: varchar
+  +serial_unico: varchar
+
+  +registrarEquipo()
+}
+
+class Asignacion_equipo {
+  +idasignacion_equipo: int
+  +fecha_entrega: datetime
+  +fecha_devolucion: datetime
+  +observaciones_entrega: varchar
+
+  +asignarEquipo()
+  +devolverEquipo()
+}
+
+class Estado {
+  +idestado: int
+  +nombre_estado: varchar
+}
+
+
+
+Roles "1" -- "0..*" Usuarios : posee
+
+Usuarios "1" -- "1" Empleado : representa
+
+Conjunto "1" -- "0..*" Contrato : tiene
+
+Conjunto "1" -- "0..*" Telefono : registra
+Tipo_telefono "1" -- "0..*" Telefono : clasifica
+
+Conjunto "1" -- "0..*" Puesto_vigilancia : contiene
+Tipo_puesto "1" -- "0..*" Puesto_vigilancia : clasifica
+
+Usuarios "1" -- "0..*" Turno : realiza
+Puesto_vigilancia "1" -- "0..*" Turno : se asigna en
+
+Turno "1" -- "0..*" Ronda : contiene
+
+Empleado "1" -- "0..*" Evaluacion_desempeno : recibe
+Usuarios "1" -- "0..*" Evaluacion_desempeno : realiza
+
+Empleado "1" -- "0..*" Advertencia_disciplinaria : recibe
+
+Turno "1" -- "0..*" Registro_acceso : registra
+Persona_acceso "1" -- "0..*" Registro_acceso : genera
+
+Registro_acceso "1" -- "0..*" Pedido : registra
+
+Turno "1" -- "0..*" Novedades : se reporta en
+Tipos_novedad "1" -- "0..*" Novedades : clasifica
+
+Novedades "1" -- "0..*" Evidencia : adjunta
+
+Evidencia "1" -- "0..*" Objeto_perdido : documenta
+Puesto_vigilancia "1" -- "0..*" Objeto_perdido : encuentra
+
+Equipo "1" -- "0..*" Asignacion_equipo : se asigna en
+Usuarios "1" -- "0..*" Asignacion_equipo : recibe
+
+Persona_acceso "1" -- "0..*" Vehiculos_personas : posee
+Vehiculo "1" -- "0..*" Vehiculos_personas : pertenece
+
+Estado "1" -- "0..*" Contrato : define estado
+Estado "1" -- "0..*" Turno : define estado
+Estado "1" -- "0..*" Equipo : define condicion
+Estado "1" -- "0..*" Pedido : define estado
+Estado "1" -- "0..*" Novedades : define nivel
+Estado "1" -- "0..*" Objeto_perdido : define clasificacion
+@enduml
