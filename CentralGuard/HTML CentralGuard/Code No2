@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CentralGuard - Sistema de Control Operativo</title>
+    <style>
+        
+        :root {
+            --bg-principal: #121824;
+            --bg-tarjeta: #1e293b;
+            --texto-principal: #f8fafc;
+            --texto-secundario: #94a3b8;
+            --color-primario: #3b82f6; 
+            --color-exito: #10b981;   
+            --color-alerta: #ef4444;   
+            --borde: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            min-height: 100vh;
+            display: flex;
+        }
+
+
+        .contenedor-auth {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-principal);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .tarjeta-auth {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 35px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .tarjeta-auth h2 {
+            font-size: 1.6rem;
+            color: var(--color-primario);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .tarjeta-auth p.subtitulo {
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-cambio {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+        }
+
+        .auth-cambio a {
+            color: var(--color-primario);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-cambio a:hover { text-decoration: underline; }
+        .oculto { display: none !important; }
+
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-tarjeta);
+            border-right: 1px solid var(--borde);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .info-sesion-lateral {
+            background-color: var(--bg-principal);
+            border: 1px solid var(--borde);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-sesion-lateral p {
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+        }
+
+        .info-sesion-lateral span {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--color-primario);
+            font-weight: bold;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        .btn-cerrar-sesion {
+            margin-top: auto;
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--color-alerta);
+            border: 1px solid var(--color-alerta);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .btn-cerrar-sesion:hover { background-color: var(--color-alerta); color: white; }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 15px;
+        }
+
+        header h1 { font-size: 1.8rem; }
+        header p { color: var(--texto-secundario); font-size: 0.9rem; }
+
+        .vista-rol { display: none; }
+        .vista-rol.active { display: block; }
+
+       
+        .grid-modulos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .tarjeta-modulo {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tarjeta-modulo.ancho-completo {
+            grid-column: 1 / -1;
+        }
+
+        .tarjeta-modulo h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--color-primario);
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 5px;
+        }
+
+        .form-grupo { margin-bottom: 12px; }
+        .form-grupo label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+            margin-bottom: 5px;
+        }
+
+        .form-grupo input, .form-grupo select, .form-grupo textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--bg-principal);
+            border: 1px solid var(--borde);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .form-grupo input:focus, .form-grupo select:focus, .form-grupo textarea:focus {
+            outline: none;
+            border-color: var(--color-primario);
+        }
+
+        .btn-enviar {
+            background-color: var(--color-exito);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-enviar:hover { opacity: 0.9; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--borde); }
+        th { color: var(--texto-secundario); }
+        .vacio-msg { text-align: center; color: var(--texto-secundario); padding: 15px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-login" class="contenedor-auth">
+        <div class="tarjeta-auth">
+            <h2>CentralGuard</h2>
+            <p class="subtitulo">Inicia sesión para acceder al control residencial</p>
+            
+            <form onsubmit="ejecutarLogin(event)">
+                <div class="form-grupo">
+                    <label>Correo Electrónico / Usuario</label>
+                    <input type="email" placeholder="nombre@correo.com" required id="login-email">
+                </div>
+                <div class="form-grupo">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••" required id="login-pass">
+                </div>
+                <div class="form-grupo">
+                    <label>Selecciona tu Rol Asignado</label>
+                    <select id="login-rol">
+                        <option value="vigilante">Vigilante</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-enviar" style="background-color: var(--color-primario);">Ingresar al Sistema</button>
+            </form>
+            
+            <div class="auth-cambio">
+                ¿Eres personal nuevo? <a href="#" onclick="mostrarPantalla('registro')">Registrar Cuenta</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantalla-registro" class="contenedor-auth oculto">
+        <div class="tarjeta-auth">
+            <h2>Crear Cuenta</h2>
+            <p class="subtitulo">Registra un nuevo usuario en la plataforma</p>
+            
+            <form onsubmit="ejecutarRegistro(event)">
+                <div class="form-grupo">
+                    <label>Nombre Completo</label>
+                    <input type="text" placeholder="Ej: Juan Mendoza" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Correo Institucional</label>
+                    <input type="email" placeholder="seguridad@central.com" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Contraseña Segura</label>
+                    <input type="password" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <button type="submit" class="btn-enviar">Solicitar Registro</button>
+            </form>
+            
+            <div class="auth-cambio">
+                ¿Ya tienes una cuenta? <a href="#" onclick="mostrarPantalla('login')">Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="sidebar">
+        <h2>CentralGuard</h2>
+        
+        <div class="info-sesion-lateral">
+            <p>Rol de la Sesión:</p>
+            <span id="rol-actual-badge">Ninguno</span>
+        </div>
+
+        <button class="btn-cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Sistema de Gestión y Control de Vigilancia</h1>
+            <p>Sesión activa: <span id="usuario-firmado" style="color: var(--color-primario); font-weight: bold;">Invitado</span></p>
+        </header>
+
+        
+        <div id="rol-vigilante" class="vista-rol">
+            <div class="grid-modulos">
+                
+                
+                <div class="tarjeta-modulo">
+                    <h3>1.1 Libro de Rondas</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'vigilante', 'Libro de Rondas')">
+                        <div class="form-grupo"><label>Fecha</label><input type="date" required data-key="Fecha"></div>
+                        <div class="form-grupo"><label>Hora de Inicio</label><input type="time" required data-key="Inicio"></div>
+                        <div class="form-grupo"><label>Hora de Finalización</label><input type="time" required data-key="Fin"></div>
+                        <div class="form-grupo"><label>Nombre del Vigilante</label><input type="text" placeholder="Tu nombre" required data-key="Vigilante"></div>
+                        <div class="form-grupo"><label>Sector Recorrido</label><input type="text" placeholder="Ej: Zona Perimetral, Torres" required data-key="Sector"></div>
+                        <div class="form-grupo"><label>Observaciones</label><textarea rows="2" placeholder="Sin novedades..." data-key="Detalle"></textarea></div>
+                        <button type="submit" class="btn-enviar">Registrar Ronda</button>
+                    </form>
+                </div>
+
+                <div class="tarjeta-modulo">
+                    <h3>1.2 Registro de Ingreso y Salida</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'vigilante', 'Ingreso y Salida')">
+                        <div class="form-grupo"><label>Nombre de la Persona</label><input type="text" required data-key="Persona"></div>
+                        <div class="form-grupo"><label>Número de Identificación</label><input type="text" required data-key="ID"></div>
+                        <div class="form-grupo"><label>Placa del Vehículo (Si aplica)</label><input type="text" placeholder="X-000" data-key="Placa"></div>
+                        <div class="form-grupo"><label>Apartamento o Casa Visitada</label><input type="text" placeholder="Torre 1 - 302" required data-key="Destino"></div>
+                        <div class="form-grupo">
+                            <label>Tipo de Ingreso</label>
+                            <select data-key="Tipo"><option>Residente</option><option>Visitante</option><option>Domiciliario</option></select>
+                        </div>
+                        <div class="form-grupo"><label>Hora de Entrada</label><input type="time" required data-key="Entrada"></div>
+                        <div class="form-grupo"><label>Hora de Salida</label><input type="time" data-key="Salida"></div>
+                        <div class="form-grupo"><label>Observaciones</label><textarea rows="1" data-key="Obs"></textarea></div>
+                        <button type="submit" class="btn-enviar">Guardar Registro de Acceso</button>
+                    </form>
+                </div>
+
+                <div class="tarjeta-modulo">
+                    <h3>1.3 Registro de Novedades</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'vigilante', 'Registro de Novedades')">
+                        <div class="form-grupo"><label>Fecha</label><input type="date" required data-key="Fecha"></div>
+                        <div class="form-grupo"><label>Hora</label><input type="time" required data-key="Hora"></div>
+                        <div class="form-grupo"><label>Descripción</label><textarea rows="2" required placeholder="Detalles de la situación..." data-key="Descripción"></textarea></div>
+                        <div class="form-grupo"><label>Evidencia Fotográfica</label><input type="file" accept="image/*"></div>
+                        <div class="form-grupo">
+                            <label>Prioridad</label>
+                            <select data-key="Prioridad"><option>Baja</option><option>Media</option><option>Alta</option></select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Estado de la Novedad</label>
+                            <select data-key="Estado"><option>Pendiente</option><option>En Proceso</option><option>Resuelta</option></select>
+                        </div>
+                        <button type="submit" class="btn-enviar" style="background-color: var(--color-alerta);">Reportar Novedad</button>
+                    </form>
+                </div>
+
+                <div class="tarjeta-modulo">
+                    <h3>1.4 Registro de Objetos Perdidos</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'vigilante', 'Objetos Perdidos')">
+                        <div class="form-grupo"><label>Fecha del Hallazgo</label><input type="date" required data-key="Fecha"></div>
+                        <div class="form-grupo"><label>Descripción del Objeto</label><input type="text" placeholder="Ej: Llaves con llavero rojo..." required data-key="Objeto"></div>
+                        <div class="form-grupo"><label>Lugar donde se encontró</label><input type="text" placeholder="Ej: Parqueadero..." required data-key="Lugar"></div>
+                        <div class="form-grupo"><label>Quien lo entrega / reporta</label><input type="text" placeholder="Nombre" required data-key="Reporta"></div>
+                        <div class="form-grupo">
+                            <label>Estado actual</label>
+                            <select data-key="Estado"><option>En custodia (Portería)</option><option>Entregado a su dueño</option></select>
+                        </div>
+                        <button type="submit" class="btn-enviar" style="background-color: var(--color-primario);">Registrar Objeto</button>
+                    </form>
+                </div>
+
+                <div class="tarjeta-modulo">
+                    <h3>1.5 Ingreso de Pedidos</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'vigilante', 'Ingreso de Pedidos')">
+                        <div class="form-grupo"><label>Destinatario (Residente)</label><input type="text" placeholder="Ej: Luz Marina..." required data-key="Residente"></div>
+                        <div class="form-grupo"><label>Torre / Apartamento</label><input type="text" placeholder="Ej: T2 - Apt 405" required data-key="Apt"></div>
+                        <div class="form-grupo"><label>Empresa de Mensajería</label><input type="text" placeholder="Ej: Servientrega..." required data-key="Mensajería"></div>
+                        <div class="form-grupo"><label>Número de Guía / Descripción</label><input type="text" placeholder="Detalles paquete" data-key="Paquete"></div>
+                        <div class="form-grupo">
+                            <label>Estado del Pedido</label>
+                            <select data-key="Estado"><option>Recibido en portería</option><option>Entregado al residente</option></select>
+                        </div>
+                        <button type="submit" class="btn-enviar" style="background-color: var(--color-exito);">Registrar Ingreso de Pedido</button>
+                    </form>
+                </div>
+
+                <div class="tarjeta-modulo ancho-completo">
+                    <h3>Historial de Notificaciones y Registros (Vigilante)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Fecha/Hora Registro</th>
+                                <th style="width: 25%;">Módulo de Origen</th>
+                                <th style="width: 55%;">Resumen de la Información Registrada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-notificaciones-vigilante">
+                            <tr><td colspan="3" class="vacio-msg">No se han generado registros en esta sesión.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="rol-supervisor" class="vista-rol">
+            <div class="grid-modulos">
+                <div class="tarjeta-modulo">
+                    <h3>2.1 Monitoreo en Tiempo Real</h3>
+                    <p style="font-size: 0.85rem; color: var(--texto-secundario); margin-bottom: 10px;">Ubicación actual reportada por GPS:</p>
+                    <ul style="list-style: none;">
+                        <li style="padding: 10px; border-bottom: 1px solid var(--borde);">Vigilante Carlos Mendoza - Portería Principal</li>
+                        <li style="padding: 10px; border-bottom: 1px solid var(--borde);">Vigilante Andrés López - Torre Residencial B</li>
+                    </ul>
+                </div>
+
+                <div class="tarjeta-modulo">
+                    <h3>2.3 Panel de Cumplimiento</h3>
+                    <table>
+                        <thead><tr><th>Indicador</th><th>Valor Actual</th></tr></thead>
+                        <tbody>
+                            <tr><td>Rondas realizadas</td><td style="color:var(--color-exito);">14</td></tr>
+                            <tr><td>Rondas pendientes</td><td style="color:var(--color-alerta);">1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            
+                <div class="tarjeta-modulo ancho-completo">
+                    <h3>Historial de Notificaciones y Registros (Supervisor)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Fecha/Hora Registro</th>
+                                <th style="width: 25%;">Módulo de Origen</th>
+                                <th style="width: 55%;">Resumen de la Información Registrada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-notificaciones-supervisor">
+                            <tr><td colspan="3" class="vacio-msg">No se han generado registros en esta sesión.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        
+        <div id="rol-administrador" class="vista-rol">
+            <div class="grid-modulos">
+                
+                <div class="tarjeta-modulo">
+                    <h3>3.1 Hoja de Vida del Empleado</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'administrador', 'Hoja de Vida')">
+                        <div class="form-grupo"><label>Nombre Completo</label><input type="text" required placeholder="Ej: Carlos Mario Silva" data-key="Empleado"></div>
+                        <div class="form-grupo"><label>Documento de Identidad</label><input type="text" required placeholder="C.C. o NIT" data-key="Documento"></div>
+                        <div class="form-grupo"><label>Cargo</label><input type="text" required placeholder="Ej: Vigilante Nocturno" data-key="Cargo"></div>
+                        <div class="form-grupo"><label>Fecha de Ingreso</label><input type="date" required data-key="Ingreso"></div>
+                        <div class="form-grupo"><label>Teléfono</label><input type="tel" required placeholder="3000000000" data-key="Tel"></div>
+                        <div class="form-grupo"><label>Dirección</label><input type="text" required placeholder="Ej: Calle 45 #12-34" data-key="Dirección"></div>
+                        <div class="form-grupo"><label>Historial Laboral</label><textarea rows="2" placeholder="Experiencias..." data-key="Historial"></textarea></div>
+                        <div class="form-grupo"><label>Advertencias / Sanciones</label><textarea rows="1" placeholder="Llamadas de atención..." data-key="Sanciones"></textarea></div>
+                        <div class="form-grupo"><label>Reconocimientos</label><textarea rows="1" placeholder="Logros..." data-key="Logros"></textarea></div>
+                        <button type="submit" class="btn-enviar">Guardar Hoja de Vida</button>
+                    </form>
+                </div>
+
+                
+                <div class="tarjeta-modulo">
+                    <h3>3.2 Gestión de Advertencias</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'administrador', 'Gestión de Advertencias')">
+                        <div class="form-grupo"><label>Fecha del Suceso</label><input type="date" required data-key="Fecha"></div>
+                        <div class="form-grupo"><label>Motivo</label><input type="text" placeholder="Ej: Abandono de puesto" required data-key="Motivo"></div>
+                        <div class="form-grupo"><label>Descripción</label><textarea rows="2" required data-key="Detalle"></textarea></div>
+                        <div class="form-grupo">
+                            <label>Nivel de Gravedad</label>
+                            <select data-key="Gravedad"><option>Leve</option><option>Moderado</option><option>Grave</option></select>
+                        </div>
+                        <button type="submit" class="btn-enviar" style="background-color: var(--color-alerta);">Registrar Sanción</button>
+                    </form>
+                </div>
+
+                
+                <div class="tarjeta-modulo">
+                    <h3>3.3 Programación de Turnos (Calendario)</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'administrador', 'Programación de Turnos')">
+                        <div class="form-grupo"><label>Vigilante Asignado</label><input type="text" placeholder="Nombre completo" required data-key="Vigilante"></div>
+                        <div class="form-grupo"><label>Supervisor Responsable</label><input type="text" placeholder="Nombre del supervisor" required data-key="Supervisor"></div>
+                        <div class="form-grupo"><label>Fecha</label><input type="date" required data-key="Fecha"></div>
+                        <div class="form-grupo"><label>Hora de Inicio</label><input type="time" required data-key="Inicio"></div>
+                        <div class="form-grupo"><label>Hora de Finalización</label><input type="time" required data-key="Fin"></div>
+                        <div class="form-grupo">
+                            <label>Puesto de Trabajo</label>
+                            <select data-key="Puesto">
+                                <option>Portería principal</option><option>Portería secundaria</option>
+                                <option>Recepción</option><option>Parqueadero</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-enviar">Asignar Turno Calendario</button>
+                    </form>
+                </div>
+
+                
+                <div class="tarjeta-modulo">
+                    <h3>3.4 Control de Uniformes y Equipos</h3>
+                    <form onsubmit="guardarDatosDinamicos(event, 'administrador', 'Control de Equipos')">
+                        <div class="form-grupo">
+                            <label>Equipo Asignado</label>
+                            <select data-key="Elemento">
+                                <option>Radio de comunicación</option><option>Linterna</option>
+                                <option>Uniforme</option><option>Bastón de seguridad</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo"><label>Fecha de Asignación</label><input type="date" required data-key="Fecha"></div style="margin-bottom: 12px;">
+                        <button type="submit" class="btn-enviar" style="background-color: var(--color-primario);">Registrar Asignación de Recurso</button>
+                    </form>
+                </div>
+
+                
+                <div class="tarjeta-modulo ancho-completo">
+                    <h3>Historial de Notificaciones y Registros (Administrador)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Fecha/Hora Registro</th>
+                                <th style="width: 25%;">Módulo de Origen</th>
+                                <th style="width: 55%;">Resumen de la Información Registrada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-notificaciones-administrador">
+                            <tr><td colspan="3" class="vacio-msg">No se han generado registros en esta sesión.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    
+    <script>
+        function ejecutarLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const rolSeleccionado = document.getElementById('login-rol').value;
+
+            document.getElementById('pantalla-login').classList.add('oculto');
+            
+            document.getElementById('usuario-firmado').innerText = email;
+            document.getElementById('rol-actual-badge').innerText = rolSeleccionado;
+            
+            cambiarRolOclusivo(rolSeleccionado);
+        }
+
+        function ejecutarRegistro(event) {
+            event.preventDefault();
+            alert("¡Registro enviado al Administrador! Ahora puedes iniciar sesión.");
+            mostrarPantalla('login');
+        }
+
+        function mostrarPantalla(pantalla) {
+            if (pantalla === 'registro') {
+                document.getElementById('pantalla-login').classList.add('oculto');
+                document.getElementById('pantalla-registro').classList.remove('oculto');
+            } else {
+                document.getElementById('pantalla-registro').classList.add('oculto');
+                document.getElementById('pantalla-login').classList.remove('oculto');
+            }
+        }
+
+        function cerrarSesion() {
+            const vistas = document.querySelectorAll('.vista-rol');
+            vistas.forEach(v => v.classList.remove('active'));
+
+            document.getElementById('pantalla-login').classList.remove('oculto');
+            document.getElementById('usuario-firmado').innerText = "Invitado";
+            document.getElementById('rol-actual-badge').innerText = "Ninguno";
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-pass').value = "";
+        }
+
+        function cambiarRolOclusivo(rol) {
+            const vistas = document.querySelectorAll('.vista-rol');
+            vistas.forEach(v => v.classList.remove('active'));
+
+            document.getElementById(`rol-${rol}`).classList.add('active');
+        }
+
+        
+        function guardarDatosDinamicos(event, rol, nombreModulo) {
+            event.preventDefault();
+            const formulario = event.target;
+            const elementos = formulario.querySelectorAll('[data-key]');
+            let resumenDatos = [];
+
+            elementos.forEach(el => {
+                if(el.value.trim() !== "") {
+                    resumenDatos.push(`<strong>${el.getAttribute('data-key')}:</strong> ${el.value}`);
+                }
+            });
+
+            const stringResumen = resumenDatos.join(' | ') || "Formulario procesado con éxito.";
+            const ahora = new Date();
+            const tiempoStamp = ahora.toLocaleDateString() + ' ' + ahora.toLocaleTimeString();
+
+            const tablaDestino = document.getElementById(`tabla-notificaciones-${rol}`);
+            
+            
+            const filaVacia = tablaDestino.querySelector('.vacio-msg');
+            if(filaVacia) {
+                tablaDestino.innerHTML = "";
+            }
+
+        
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td style="color: var(--texto-secundario); font-family: monospace;">${tiempoStamp}</td>
+                <td style="color: var(--color-primario); font-weight: 600;">${nombreModulo}</td>
+                <td>${stringResumen}</td>
+            `;
+            
+        
+            tablaDestino.insertBefore(nuevaFila, tablaDestino.firstChild);
+
+            alert(`[SISTEMA - ÉXITO]: Registro añadido al historial de ${rol.toUpperCase()}`);
+            formulario.reset();
+        }
+    </script>
+</body>
+</html>
