@@ -1,0 +1,335 @@
+create database centralguard;
+use centralguard;
+
+create table roles (
+idroles int not null auto_increment comment 'Identificador único secuencial de cada rol.',
+nombre_rol varchar(50) not null comment 'Nombre del perfil (Administrador, Supervisor, Vigilante).',
+primary key (idroles));
+
+create table tipo_novedad (
+idtipo_novedad int not null auto_increment comment 'Código único de la categoría del incidente.',
+nombre_tipo varchar(70) not null comment 'Descripción del evento (Accidente, Robo, Ruido excesivo).',
+primary key (idtipo_novedad));
+
+
+create table tipo_puesto (
+  idtipo_puesto INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador único del tipo de puesto.',
+  nombre_tipo VARCHAR(45) NOT NULL COMMENT 'Describe la categoría o naturaleza del puesto de vigilancia (Ej: \'Portería Principal\', \'Sótano\', \'Zona Social\').',
+  PRIMARY KEY (`idtipo_puesto`));
+
+
+create table usuarios (
+idusuario int not null auto_increment comment 'Llave primaria y control de cuenta de usuario.',
+idroles int not null comment 'Conecta la cuenta con sus permisos en el sistema.',
+usuario varchar(50) not null unique comment 'Nombre de usuario único para realizar el login.',
+contraseña varchar(255) not null comment 'Contraseña cifrada de forma segura.',
+nombre varchar(45) not null comment 'Nombre del usuario.',
+apellido varchar(45) not null comment 'Apellido del usuario.',
+fecha_creacion timestamp null default current_timestamp comment 'Registro de auditoría de cuándo se creó la cuenta.',
+primary key (idusuario),
+foreign key (idroles)
+references centralguard.roles (idroles));
+
+
+create table tipo_telefono (
+idtipo_telefono int not null comment 'Identificador único (PK).',
+nombre_tipo varchar(45) not null comment 'Categoría del contacto (ej: "Fijo", "Celular", "Emergencias", "Recepción").',
+primary key (idtipo_telefono));
+
+
+create table telefono (
+idtelefono int not null auto_increment comment 'Identificador único del registro telefónico.',
+idtipo_telefono int not null comment 'Referencia a la categoría del teléfono (FK).',
+numero_contacto varchar(15) not null comment 'El número telefónico plano (celular o fijo de 7 a 10 dígitos).',
+primary key (idtelefono),
+foreign key (idtipo_telefono)
+references centralguard.tipo_telefono (idtipo_telefono));
+
+
+create table conjunto (
+idconjunto int not null auto_increment comment 'Código único del contrato/cliente corporativo.',
+nombre_conjunto varchar(120) not null comment 'Nombre oficial de la copropiedad o edificio.',
+nit_identificacion varchar(45) null comment 'Documento tributario (NIT) de la copropiedad.',
+nombre_contacto varchar(45) not null comment 'Nombre del administrador delegado del conjunto.',
+dirección varchar(100) not null comment 'Dirección del conjunto o copropiedad.',
+idtelefono int not null comment 'Teléfono de la persona de contacto. (FK)',
+correo_electronico varchar(100) null comment 'Correo para enviar reportes o facturas.',
+primary key (idconjunto),
+foreign key (idtelefono)
+references centralguard.telefono (idtelefono));
+
+
+create table puesto_vigilancia (
+idpuesto_vigilancia int not null auto_increment comment 'Código del puesto físico de control.',
+idconjunto int not null comment 'Conjunto residencial al que pertenece este puesto.',
+idtipo_puesto int not null comment 'Tipo de frente de la tabla maestra.',
+nombre_identificador varchar(100) null comment 'Nombre específico (Ej: Portería Vehicular Norte).',
+primary key (idpuesto_vigilancia),
+foreign key (idconjunto)
+references centralguard.conjunto (idconjunto),
+foreign key (idtipo_puesto)
+references centralguard.tipo_puesto (idtipo_puesto));
+
+
+create table tipo_documento (
+idtipo_documento int not null,
+nombre_tipo varchar(45) not null,
+primary key (idtipo_documento));
+  
+create table documento ( 
+iddocumento int not null auto_increment COMMENT 'Identificador único del documento.',
+idtipo_documento int not null COMMENT 'Número de identificador del usuario.',
+numero_documento int not null  COMMENT 'Identificador del tipo de documento asociado.',
+primary key (`iddocumento`),
+index `fk_documento_tipo_documento1_idx` (`idtipo_documento` ASC), 
+CONSTRAINT `fk_documento_tipo_documento1` 
+foreign key (`idtipo_documento`) 
+REFERENCES `centralguard`.`tipo_documento` (`idtipo_documento`)
+on delete no action
+on update no action); 
+  
+create table empleado (
+idempleado int not null auto_increment COMMENT 'Identificador interno del expediente.',
+idusuario int not null comment 'Cuenta de usuario vinculada. No se repiten.',
+iddocumento int not null comment 'Referencia a la tabla del documento (FK).',
+fecha_nacimiento date not null comment 'Fecha de nacimiento para control de edad legal.',
+historial_laboral text null comment 'Trayectoria y empresas de seguridad previas.',
+reconocimientos text null comment 'Felicitaciones, medallas o logros en el servicio.',
+primary key (`idempleado`,`idusuario`),
+index `fk_empleados_usuarios1_idx` (`idusuario` ASC),
+index `fk_empleado_documento1_idx` (`iddocumento` ASC),
+constraint `fk_empleados_usuarios1` foreign key (`idusuario`) references `centralguard`.`usuarios` (`idusuario`)
+on delete no action
+on update no action,
+constraint `fk_empleado_documento1` foreign key (`iddocumento`) references `centralguard`.`documento` (`iddocumento`)
+on delete no action
+on update no action);
+  
+create table advertencia_disciplinaria ( 
+idadvertencia_disciplinaria int not null auto_increment comment 'Código del proceso disciplinario.',
+idempleado int not null comment 'Funcionario que cometió o recibió la falta.',
+fecha date not null comment 'Fecha del sucedo o reporte.',
+motivo varchar(100) not null comment 'Título corto de la infracción (Retardo, Abandono de puesto).',
+descripcion varchar(100) not null comment 'Relato detallado de la falta observada.',
+nivel_gravedad ENUM('Leve', 'Moderado', 'Grave') null default'Leve' comment 'Escala parametrizada: Leve, Moderado, Grave.',
+primary key (`idadvertencia_disciplinaria`),
+index `fk_advertencias_disciplinarias_empleados1_idx` (`idempleado` asc),
+constraint `fk_advertencias_disciplinarias_empleados1` foreign key (`idempleado`) references `centralguard`.`empleado` (`idempleado`)
+on delete no action
+on update no action);
+  
+create table evaluacion_desempeño ( 
+idevaluacion_desempeño int not null auto_increment comment 'Código único de la evaluación',
+idempleado int not null comment 'Funcionario operativo que está siendo evaluado.',
+idusuario int not null comment 'Administrador o supervisor que ejecuta la calificación.',
+fecha_evaluacion date not null comment 'Día en que se procesó la auditoría',
+puntaje_numerico int not null comment 'Calificación cuantitativa (Escala métrica de 1 a 100).',
+comentarios_retroalimentacion varchar(45) null comment 'Sugerencias o felicitaciones cualitativas.',
+primary key (`idevaluacion_desempeño`),
+index `fk_evaluaciones_desempeño_empleados1_idx` (`idempleado` asc),
+index `fk_evaluaciones_desempeño_usuario1_idx` (`idusuario` asc),
+constraint `fk_evaluaciones_desempeño_empleados1` foreign key (`idempleado`) references `centralguard`.`empleado` (`idempleado`)
+on delete no action
+on update no action);
+  
+create table equipo (
+idequipo int not null auto_increment comment 'Identificador interno del activo.',
+nombre_activo varchar(100) not null comment 'Nombre comercial de la herramienta (Radio Motorola, Linterna LED).',
+serial_unico varchar(50) not null comment 'Serial de fábrica único para evitar duplicación o fraudes.',
+estado enum('Excelente','Bueno','Regular','Deficiente','En Mantenimiento') not null, 
+primary key (`idequipo`), unique index `serial_unico_UNIQUE` (`serial_unico` asc));
+  
+create table asignacion_equipo ( 
+idasignacion_equipo int not null auto_increment comment 'Código de la asignación.',
+idusuario int not null comment 'El trabajador que recibe el equipo y responde por él.',
+idequipo int not null comment 'El dispositivo tecnológico prestado.',
+fecha_entrega datetime not null comment 'Fecha y hora exacta del desembolso de la dotación.',
+fecha_devolucion datetime null comment 'Queda vacío hasta que el trabajador regrese el equipo del almacen.',
+observaciones_entrega varchar(255) null comment 'Notas sobre el estado del aparato al ser prestado.',
+primary key (`idasignacion_equipo`), 
+index `fk_asignaciones_equipo_equipo1_idx` (`idequipo` asc), 
+index `fk_asignaciones_equipo_usuarios1_idx` (`idusuario` asc), 
+constraint `fk_asignaciones_equipo_equipos1` foreign key (`idequipo`) references `centralguard`.`equipo` (`idequipo`) 
+on delete no action
+on update no action,
+constraint `fk_asignaciones_equipo_usuarios1` foreign key (`idusuario`) references `centralguard`.`usuarios` (`idusuario`)
+on delete no action
+on update no action);
+
+create table turno (
+idturno int not null auto_increment comment 'Identificador único del cuadrante/turno.',
+idusuario int not null comment 'Referencia a la tabla del usuario (FK).',
+idempleado int not null comment 'Referencia a la tabla del empleado (FK).',
+idpuesto_vigilancia int not null comment 'La portería o frente exacto a custodiar.',
+fecha date not null comment 'Día calendario programado para el turno.',
+hora_inicio time not null comment 'Hora estipulada de entrada.',
+hora_fin time not null comment 'Hora estipulada de salida.', 
+estado enum('Programado','En Progreso','Cumplido','Cancelado','Inasistencia') not null,
+primary key (`idturno`),
+index `fk_turnos_puestos_vigilancia1_idx` (`idpuesto_vigilancia` asc),
+index `fk_turno_empleado1_idx` (`idempleado` asc),
+index `fk_turno_usuarios1_idx` (`idusuario` asc),
+constraint `fk_turnos_puesto_vigilancia1_idx` foreign key (`idpuesto_vigilancia`) references `centralguard`.`puesto_vigilancia` (`idpuesto_vigilancia`) 
+on delete no action
+on update no action,
+constraint `fk_turnos_puesto_empleado1_idx` foreign key (`idempleado`) references `centralguard`.`empleado` (`idempleado`) 
+on delete no action
+on update no action,
+constraint `fk_turnos_puesto_usuarios1_idx` foreign key (`idusuario`) references `centralguard`.`usuarios` (`idusuario`) 
+on delete no action
+on update no action);
+
+create table ronda ( 
+idronda int not null auto_increment comment 'Identificador único de la ronda.',
+idturno int not null comment 'Vincula la ronda al turno activo para evitar fraudes horarios.',
+hora_marcacion_inicio time not null comment 'Momento exacto en que soltó la base física.',
+hora_marcacion_fin time not null comment 'Momento en que regresó a asegurar el puesto.',
+puntos_validados varchar(255) not null comment 'Resumen de los puntos de control validados (Ej: Botones 1 al 5).',
+observaciones_ronda text null comment 'Novedades menores encontradas en las áreas comunes.',
+primary key (`idronda`), 
+index `fk_rondas_turnos1_idx` (`idturno` asc),
+constraint `fk_rondas_turnos1_idx` foreign key (`idturno`) references `centralguard`.`turno` (`idturno`) 
+on delete no action
+on update no action); 
+
+create table empresa_procedencia (
+idempresa_procedencia int not null comment 'Llave primaria. Identificador único para cada entidad externa.',
+nombre_empresa varchar(45) not null comment 'Razón social o nombre comercial de la empresa proveedora.',
+primary key (`idempresa_procedencia`));
+
+create table persona_acceso (
+idpersona_acceso int not null auto_increment comment 'Identificador único del visitante en el sistema.',
+primer_nombre varchar(50) not null comment 'Primer nombre del visitante.',
+primer_apellido varchar(50) not null comment 'Primer apellido del visitante.',
+tipo_persona enum('Residente','Visitante','Domiciliario') not null comment 'Define la categoría del sujeto.',
+idempresa_procedencia int not null comment 'Llave foránea que indica la empresa a la que pertenece el visitante o domiciliario.',
+primary key (`idpersona_acceso`), 
+index `fk_persona_acceso_empresa_procedencia1_idx` (`idempresa_procedencia` asc),
+constraint `fk_persona_acceso_empresa_procedencia1` foreign key (`idempresa_procedencia`) references `centralguard`.`empresa_procedencia` (`idempresa_procedencia`)
+on delete no action
+on update no action);
+
+create table vehiculo (
+idvehiculo int not null auto_increment comment 'Identificador numérico del vehículo.',
+placa varchar(15) not null comment 'Matrícula única vehicular.',
+marca varchar(50) null comment 'Características comerciales del coche (Mazda 3, Renault Logan).',
+modelo varchar(45) null,
+color varchar(20) null comment 'Tono de pintura exterior del carro.',
+primary key (`idvehiculo`),
+unique index `placa_UNIQUE` (`placa` asc));
+
+create table registro_acceso (
+idregistro_acceso int not null comment 'Númro único de radicado de la entrada.',
+idturno int not null comment 'Turno y vigilante que validó y autorizó el ingreso.',
+idpersona_acceso int not null comment 'Ciudadanos que ingresa.',
+apartamento_destino varchar(30) not null comment 'Destino final que otorgó el permiso (Ej: Torre 3 Apto 402).',
+hora_entrada timestamp not null default current_timestamp comment 'Fecha y hora automatizada de entrada.',
+hora_salida timestamp null comment 'Se llena cuando el guardia marca la salida física del recinto.',
+observaciones_acceso text null comment 'Detalles preventivos adicionales del ingreso.',
+primary key (`idregistro_acceso`),
+index `fk_registro_acceso_visitantes1_idx` (`idpersona_acceso` asc),
+constraint `fk_registro_accesos_turnos1` foreign key (`idturno`) references `centralguard`.`turno` (`idturno`)
+on delete no action
+on update no action,
+constraint `fk_registro_accesos_visitantes1` foreign key (`idpersona_acceso`) references `centralguard`.`persona_acceso` (`idpersona_acceso`)
+on delete no action
+on update no action);
+
+
+create table novedades (
+idnovedad int not null auto_increment comment 'Consecutivo único del informe de novedad.',
+idturno int not null comment 'Turno y funcionario que presenció y redactó el informe.',
+idtipo_novedad int not null comment 'Vínculo con la tabla maestra de categorías.',
+hora_reporte time not null comment 'Momento exacto en que sucedió o se observó el evento.',
+descripcion_hechos text not null comment 'Narrativa descriptiva y técnica de lo ocurrido.',
+estado enum('Pendiente','En Proceso','Resuelta') not null,
+primary key (`idnovedad`),
+index `fk_novedades_turnos1_idx` (`idturno` asc),
+index `fk_novedades_tipo_novedad1_idx` (`idtipo_novedad` asc),
+constraint `fk_novedades_turnos1` foreign key (`idturno`) references `centralguard`.`turno` (`idturno`)
+on delete no action
+on update no action,
+constraint `fk_novedades_tipo_novedad1` foreign key (`idtipo_novedad`) references `centralguard`.`tipo_novedad` (`idtipo_novedad`)
+on delete no action
+on update no action);
+
+create table evidencia (
+idevidencia int not null comment 'Código identificador de la prueba.',
+url_imagen_evidencia varchar(255) not null comment 'Ruta de almacenamiento del archivo en el servidor.',
+fecha_captura timestamp not null comment 'Fecha y hora en la que se subió el archivo.',
+idnovedad int not null comment 'Llave foránea que indica la llave principal de la tabla Novedades.',
+primary key (idevidencia),
+index fk_evidencia_novedades1_idx (idnovedad asc),
+constraint fk_evidencia_novedades1 foreign key (idnovedad) references centralguard.novedades (idnovedad)
+on delete no action
+on update no action);
+
+create table objeto_perdido (
+idobjeto_perdido int not null auto_increment comment 'Número de inventario del objeto en custodia.',
+idevidencia int not null comment 'Referencia a la evidencia del objeto encontrado o perdido.',
+idpuesto_vigilancia int not null comment 'Puesto o área donde fue encontrado o entregado.',
+nombre_objeto varchar(45) not null comment 'Nombre del objeto (Billetera, Llaves, Gafas).',
+descripcion_detallada text null comment 'Descripción de las características del objeto.',
+fecha_hallazgo varchar(45) not null comment 'Fecha en que se encontró el objeto.',
+estado enum('Entregado', 'En custodia', 'Desechado', 'Donado') not null,
+primary key (idobjeto_perdido),
+index fk_objetos_perdidos_puestos_vigilancia1_idx (idpuesto_vigilancia asc),
+index fk_objetos_perdidos_evidencias1_idx (idevidencia asc),
+constraint fk_objetos_perdidos_puestos_vigilancia1
+foreign key (idpuesto_vigilancia) references centralguard.puesto_vigilancia (idpuesto_vigilancia)
+on delete no action
+on update no action,
+constraint fk_objetos_perdidos_evidencias1
+foreign key (idevidencia) references centralguard.evidencia (idevidencia)
+on delete no action
+on update no action);
+
+create table pedido (
+idpedidos int not null comment 'Identificador único del pedido.',
+idregistro_acceso int not null comment 'Llave foránea que vincula el pedido con el registro de entrada.',
+nombre_pedido varchar(100) not null comment 'Ejemplo: "Paquete Amazon", "Domicilio Comida".',
+descripcion text null comment 'Detalles adicionales del paquete.',
+nombre_destinatario varchar(100) null comment 'Nombre del residente que recibirá el pedido.',
+hora_llegada timestamp null comment 'Momento en que llegó el pedido a la portería.',
+estado enum('Entregado', 'En custodia', 'Desechado', 'Donado') not null,
+primary key (idpedidos),
+index fk_pedido_registro_acceso1_idx (idregistro_acceso asc),
+constraint fk_pedido_registro_acceso1
+foreign key (idregistro_acceso) references centralguard.registro_acceso (idregistro_acceso)
+on delete no action
+on update no action);
+
+create table contrato (
+idcontrato int not null comment 'Identificador único del contrato.',
+idconjunto int not null comment 'Referencia al conjunto relacionado.',
+fecha_inicio date not null comment 'Fecha en que inicia el servicio.',
+fecha_fin date null comment 'Fecha en que termina el servicio.',
+valor_mensual decimal not null comment 'Valor mensual del servicio.',
+terminos_condiciones text not null comment 'Condiciones y cláusulas del contrato.',
+idestadocontrato int not null comment 'Referencia al estado actual del contrato.',
+estado enum('Activo', 'Finalizado', 'Suspendido') not null,
+primary key (idcontrato),
+index fk_contrato_cliente_conjunto1_idx (idconjunto asc),
+constraint fk_contrato_cliente_conjunto1
+foreign key (idconjunto) references centralguard.conjunto (idconjunto)
+on delete no action
+on update no action);
+
+create table vehiculos_personas (
+id_vehiculo_persona int not null comment 'Identificador único de la relación.',
+id_vehiculo int not null comment 'Referencia al vehículo relacionado.',
+id_personas_acceso int not null comment 'Referencia a la persona relacionada.',
+es_conductor_principal tinyint null default 1 comment 'Indica si es el conductor principal. 1 = Sí, 0 = No.',
+primary key (id_vehiculo, id_personas_acceso, id_vehiculo_persona),
+index fk_vehiculo_has_persona_acceso_persona_acceso1_idx (id_personas_acceso asc),
+index fk_vehiculo_has_persona_acceso_vehiculo1_idx (id_vehiculo asc),
+constraint fk_vehiculo_has_persona_acceso_vehiculo1
+foreign key (id_vehiculo) references centralguard.vehiculo (idvehiculo)
+on delete no action
+on update no action,
+constraint fk_vehiculo_has_persona_acceso_persona_acceso1
+foreign key (id_personas_acceso) references centralguard.persona_acceso (idpersona_acceso)
+on delete no action
+on update no action);
+
+
