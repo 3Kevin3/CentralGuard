@@ -13,9 +13,9 @@ primary key (idtipo_novedad));
 
 
 create table tipo_puesto (
-  idtipo_puesto INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador único del tipo de puesto.',
-  nombre_tipo VARCHAR(45) NOT NULL COMMENT 'Describe la categoría o naturaleza del puesto de vigilancia (Ej: \'Portería Principal\', \'Sótano\', \'Zona Social\').',
-  PRIMARY KEY (`idtipo_puesto`));
+idtipo_puesto INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador único del tipo de puesto.',
+nombre_tipo VARCHAR(45) NOT NULL COMMENT 'Describe la categoría o naturaleza del puesto de vigilancia (Ej: \'Portería Principal\', \'Sótano\', \'Zona Social\').',
+primary key (`idtipo_puesto`));
 
 
 create table usuarios (
