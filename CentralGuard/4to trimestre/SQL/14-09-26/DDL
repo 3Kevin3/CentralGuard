@@ -61,7 +61,6 @@ references centralguard.conjunto (idconjunto),
 foreign key (idtipo_puesto)
 references centralguard.tipo_puesto (idtipo_puesto));
 
--- Tabla documento modificada sin dependencia de tipo_documento
 create table documento (  
 iddocumento int not null auto_increment COMMENT 'Identificador único del documento.',
 numero_documento varchar(45) not null COMMENT 'Número de identificación.',
