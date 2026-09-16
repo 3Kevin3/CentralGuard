@@ -3,6 +3,7 @@ import { supabase } from './supabase/client'
 import Swal from 'sweetalert2'
 import './App.css'
 
+import Navbar from './components/Navbar'
 import LibroRondas from './components/vigilante/LibroRondas'
 import ControlAccesos from './components/vigilante/ControlAccesos'
 import RegistroNovedades from './components/vigilante/RegistroNovedades'
@@ -20,6 +21,7 @@ function App() {
   const [cargando, setCargando] = useState(false)
 
   const [regNombre, setRegNombre] = useState('')
+  const [regApellido, setRegApellido] = useState('')
   const [regDocumento, setRegDocumento] = useState('')
   const [regCorreo, setRegCorreo] = useState('')
   const [regPassword, setRegPassword] = useState('')
@@ -47,7 +49,7 @@ function App() {
 
   const cargarPersonal = async () => {
     try {
-      const { data, error } = await supabase.from('empleado').select('*')
+      const { data, error } = await supabase.from('empleado').select('*, usuarios(nombre, apellido, usuario)')
       if (!error) setPersonal(data || [])
     } catch (e) {
       console.error("Error cargando personal:", e)
@@ -69,26 +71,26 @@ function App() {
       const { data, error } = await supabase
         .from('usuarios')
         .select('*, roles(nombre_rol)')
-        .eq('correo', emailInput)
+        .eq('usuario', emailInput) // O usa .eq('correo', emailInput) dependiendo de cómo guardes el login
         .maybeSingle()
 
       if (error || !data) {
-        throw new Error('El correo ingresado no se encuentra registrado en el sistema.')
+        throw new Error('El usuario o correo ingresado no se encuentra registrado.')
+      }
+
+      if (data.contrasena !== passwordInput) {
+        throw new Error('Contraseña incorrecta.')
       }
 
       let rolAsignado = 'vigilante'
       if (data.roles && data.roles.nombre_rol) {
         rolAsignado = data.roles.nombre_rol.toLowerCase()
-      } else if (emailInput.includes('admin')) {
-        rolAsignado = 'admin'
-      } else if (emailInput.includes('supervisor')) {
-        rolAsignado = 'supervisor'
       }
 
       const userData = { 
-        email: data.correo, 
+        email: data.usuario, 
         rol: rolAsignado, 
-        nombre: data.nombre_completo 
+        nombre: `${data.nombre} ${data.apellido}` 
       }
       
       guardarSesion(userData)
@@ -99,7 +101,6 @@ function App() {
       setCargando(false)
     }
   }
-
 
   const guardarSesion = (userData) => {
     setUsuarioLogueado(userData)
@@ -122,14 +123,12 @@ function App() {
     })
   }
 
-
   const handleRegistro = async (e) => {
     e.preventDefault()
     setCargando(true)
 
     try {
-
-      let idRolAsignado = 3 
+      let idRolAsignado = 3 // Por defecto rol vigilante
 
       if (regCorreo.toLowerCase().includes('admin')) {
         idRolAsignado = 1
@@ -137,18 +136,20 @@ function App() {
         idRolAsignado = 2
       }
 
-      const { error } = await supabase.from('usuarios').insert([{
-        nombre_completo: regNombre,
-        correo: regCorreo,
-        contraseña: regPassword, 
-        idroles: idRolAsignado
-      }])
+      // 1. Insertar el usuario en la tabla 'usuarios'
+      const { data: usuarioCreado, error: errorUsuario } = await supabase.from('usuarios').insert([{
+        idroles: idRolAsignado,
+        usuario: regCorreo,       // Usando el correo como nombre de usuario único
+        contrasena: regPassword,  // Sin eñe tal como está en la BD
+        nombre: regNombre,
+        apellido: regApellido
+      }]).select().single()
 
-      if (error) throw error
+      if (errorUsuario) throw errorUsuario
 
       Swal.fire('¡Registro exitoso!', 'Su cuenta ha sido creada con éxito. Ya puede iniciar sesión.', 'success')
       setMostrarModalRegistro(false)
-      setRegNombre(''); setRegCorreo(''); setRegPassword('');
+      setRegNombre(''); setRegApellido(''); setRegDocumento(''); setRegCorreo(''); setRegPassword('');
 
     } catch (error) {
       Swal.fire('Error en el registro', error.message, 'error')
@@ -212,12 +213,16 @@ function App() {
               <div className="table-responsive bg-white rounded shadow-sm p-2">
                 <table className="table table-striped table-hover mb-0 align-middle">
                   <thead className="table-dark">
-                    <tr><th>Nombre</th><th>Documento</th><th>Cargo</th><th>Correo</th></tr>
+                    <tr><th>Nombre</th><th>Fecha Nacimiento</th><th>Historial</th></tr>
                   </thead>
                   <tbody>
-                    {personal.length === 0 ? <tr><td colSpan="4" className="text-center text-muted py-3">No hay empleados registrados.</td></tr> :
+                    {personal.length === 0 ? <tr><td colSpan="3" className="text-center text-muted py-3">No hay empleados registrados.</td></tr> :
                       personal.map((emp, i) => (
-                        <tr key={i}><td>{emp.nombre}</td><td>{emp.numero_documento}</td><td>{emp.cargo}</td><td>{emp.correo}</td></tr>
+                        <tr key={i}>
+                          <td>{emp.usuarios ? `${emp.usuarios.nombre} ${emp.usuarios.apellido}` : 'Sin usuario'}</td>
+                          <td>{emp.fecha_nacimiento}</td>
+                          <td>{emp.historial_laboral || 'N/A'}</td>
+                        </tr>
                       ))
                     }
                   </tbody>
@@ -237,55 +242,17 @@ function App() {
     )
   }
 
-
   return (
     <div className="min-vh-100 d-flex flex-column bg-white">
       
-
-      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 sticky-top shadow-sm">
-        <div className="container-fluid">
-          <a className="navbar-brand fw-bold text-dark fs-4" href="#inicio" onClick={(e) => { e.preventDefault(); scrollToSection('inicio'); }}>
-            🛡️ CENTRALGUARD
-          </a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul className="navbar-nav mx-auto gap-3">
-              <li className="nav-item">
-                <button className="nav-link bg-transparent border-0 fw-semibold text-secondary" onClick={() => scrollToSection('inicio')}>
-                  INICIO
-                </button>
-              </li>
-              <li className="nav-item">
-                <button className="nav-link bg-transparent border-0 fw-semibold text-secondary" onClick={() => scrollToSection('funciones')}>
-                  ¿PARA QUÉ FUNCIONA?
-                </button>
-              </li>
-              <li className="nav-item">
-                <button className="nav-link bg-transparent border-0 fw-semibold text-secondary" onClick={() => scrollToSection('contacto')}>
-                  CONTÁCTENOS
-                </button>
-              </li>
-            </ul>
-
-            <div className="d-flex gap-2">
-              <button onClick={() => setMostrarModalRegistro(true)} className="btn btn-outline-dark px-3 fw-semibold rounded-pill">
-                Registrarse
-              </button>
-              <button onClick={() => setMostrarModalLogin(true)} className="btn btn-dark px-3 fw-semibold rounded-pill">
-                Iniciar Sesión
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+      {/* Navbar externo */}
+      <Navbar 
+        scrollToSection={scrollToSection} 
+        setMostrarModalRegistro={setMostrarModalRegistro} 
+        setMostrarModalLogin={setMostrarModalLogin} 
+      />
 
       <div className="flex-grow-1">
-        
-
         <section id="inicio" className="position-relative text-white text-center d-flex align-items-center justify-content-center" style={{ minHeight: '90vh', background: 'linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url("https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1500&q=80") center/cover no-repeat' }}>
           <div className="container px-3">
             <h1 className="display-3 fw-bold mb-4">Seguridad y Control Inteligente</h1>
@@ -343,7 +310,6 @@ function App() {
           </div>
         </section>
 
-
         <section id="contacto" className="py-5 bg-light border-top">
           <div className="container my-3" style={{ maxWidth: '600px' }}>
             <div className="card shadow border-0 p-5 bg-white">
@@ -367,14 +333,13 @@ function App() {
             </div>
           </div>
         </section>
-
       </div>
-
 
       <footer className="bg-dark text-white text-center py-4 mt-auto">
         <p className="mb-0 small text-muted">© 2026 CentralGuard - Sistema de Control y Seguridad Operativa. Todos los derechos reservados.</p>
       </footer>
 
+      {/* Modal Login */}
       {mostrarModalLogin && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -385,8 +350,8 @@ function App() {
               </div>
               <form onSubmit={handleLogin}>
                 <div className="mb-3">
-                  <label className="form-label fw-semibold small">Correo Electrónico:</label>
-                  <input type="email" className="form-control" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder="correo@centralguard.com" required />
+                  <label className="form-label fw-semibold small">Usuario o Correo:</label>
+                  <input type="text" className="form-control" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder="correo@centralguard.com" required />
                 </div>
                 <div className="mb-4">
                   <label className="form-label fw-semibold small">Contraseña:</label>
@@ -407,7 +372,7 @@ function App() {
         </div>
       )}
 
-
+      {/* Modal Registro */}
       {mostrarModalRegistro && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -418,15 +383,19 @@ function App() {
               </div>
               <form onSubmit={handleRegistro}>
                 <div className="mb-3">
-                  <label className="form-label fw-semibold small">Nombre Completo:</label>
-                  <input type="text" className="form-control" value={regNombre} onChange={e => setRegNombre(e.target.value)} placeholder="Ingrese su nombre completo" required />
+                  <label className="form-label fw-semibold small">Nombre:</label>
+                  <input type="text" className="form-control" value={regNombre} onChange={e => setRegNombre(e.target.value)} placeholder="Ingrese su nombre" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label fw-semibold small">Apellido:</label>
+                  <input type="text" className="form-control" value={regApellido} onChange={e => setRegApellido(e.target.value)} placeholder="Ingrese su apellido" required />
                 </div>
                 <div className="mb-3">
                   <label className="form-label fw-semibold small">Número de Documento:</label>
                   <input type="text" className="form-control" value={regDocumento} onChange={e => setRegDocumento(e.target.value)} placeholder="Ingrese su número de documento" required />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label fw-semibold small">Correo Electrónico:</label>
+                  <label className="form-label fw-semibold small">Correo Electrónico (Usuario):</label>
                   <input type="email" className="form-control" value={regCorreo} onChange={e => setRegCorreo(e.target.value)} placeholder="correo@centralguard.com" required />
                   <div className="form-text text-muted" style={{ fontSize: '0.75rem' }}>
                     * El correo electrónico proporcionado previamente será utilizado para identificar y validar el cargo correspondiente.
