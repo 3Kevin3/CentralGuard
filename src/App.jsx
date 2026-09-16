@@ -3,7 +3,6 @@ import { supabase } from './supabase/client'
 import Swal from 'sweetalert2'
 import './App.css'
 
-// Importación de componentes del rol Vigilante
 import LibroRondas from './components/vigilante/LibroRondas'
 import ControlAccesos from './components/vigilante/ControlAccesos'
 import RegistroNovedades from './components/vigilante/RegistroNovedades'
@@ -12,23 +11,19 @@ import ControlPedidos from './components/vigilante/ControlPedidos'
 
 function App() {
   const [usuarioLogueado, setUsuarioLogueado] = useState(null)
-  
-  // Estados para modales de autenticación
+
   const [mostrarModalLogin, setMostrarModalLogin] = useState(false)
   const [mostrarModalRegistro, setMostrarModalRegistro] = useState(false)
 
-  // Inputs de Login
   const [emailInput, setEmailInput] = useState('')
   const [passwordInput, setPasswordInput] = useState('')
   const [cargando, setCargando] = useState(false)
 
-  // Inputs de Registro
   const [regNombre, setRegNombre] = useState('')
   const [regDocumento, setRegDocumento] = useState('')
   const [regCorreo, setRegCorreo] = useState('')
   const [regPassword, setRegPassword] = useState('')
 
-  // Navegación interna del sistema según rol
   const [seccion, setSeccion] = useState('accesos') 
   const [subSeccionVigilante, setSubSeccionVigilante] = useState('rondas') 
   const [personal, setPersonal] = useState([])
@@ -59,7 +54,6 @@ function App() {
     }
   }
 
-  // Función para desplazamiento suave hacia las secciones
   const scrollToSection = (id) => {
     const element = document.getElementById(id)
     if (element) {
@@ -67,7 +61,6 @@ function App() {
     }
   }
 
-  // Manejo de Login consultando la tabla 'usuarios'
   const handleLogin = async (e) => {
     e.preventDefault()
     setCargando(true)
@@ -83,7 +76,6 @@ function App() {
         throw new Error('El correo ingresado no se encuentra registrado en el sistema.')
       }
 
-      // Determinamos el rol basado en la relación con la tabla 'roles' o el correo
       let rolAsignado = 'vigilante'
       if (data.roles && data.roles.nombre_rol) {
         rolAsignado = data.roles.nombre_rol.toLowerCase()
@@ -130,15 +122,14 @@ function App() {
     })
   }
 
-// Manejo de Registro con recarga de esquema para evitar errores de caché en Supabase
+
   const handleRegistro = async (e) => {
     e.preventDefault()
     setCargando(true)
 
     try {
-      // Asignamos un idroles por defecto según el correo (por ejemplo: 1 para admin, 2 para supervisor, 3 para vigilante)
-      // O ajusta el idroles según los registros que tengas en tu tabla 'roles'
-      let idRolAsignado = 3 // Vigilante por defecto
+
+      let idRolAsignado = 3 
 
       if (regCorreo.toLowerCase().includes('admin')) {
         idRolAsignado = 1
@@ -149,7 +140,7 @@ function App() {
       const { error } = await supabase.from('usuarios').insert([{
         nombre_completo: regNombre,
         correo: regCorreo,
-        contraseña: regPassword, // Idealmente cifrada, se guarda directo como pide el campo de tu BD
+        contraseña: regPassword, 
         idroles: idRolAsignado
       }])
 
@@ -158,7 +149,7 @@ function App() {
       Swal.fire('¡Registro exitoso!', 'Su cuenta ha sido creada con éxito. Ya puede iniciar sesión.', 'success')
       setMostrarModalRegistro(false)
       setRegNombre(''); setRegCorreo(''); setRegPassword('');
-      // Limpiamos también el documento si lo tenías guardado en otro estado
+
     } catch (error) {
       Swal.fire('Error en el registro', error.message, 'error')
     } finally {
@@ -173,7 +164,6 @@ function App() {
     setPasswordInput('')
   }
 
-  // ================= SI YA ESTÁ LOGUEADO (PANEL DE OPERACIONES) =================
   if (usuarioLogueado) {
     return (
       <div className="container py-4">
@@ -247,11 +237,11 @@ function App() {
     )
   }
 
-  // ================= VISTA PÚBLICA (LANDING PAGE CON SCROLL SUAVE) =================
+
   return (
     <div className="min-vh-100 d-flex flex-column bg-white">
       
-      {/* NAVBAR SUPERIOR FIJO */}
+
       <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 sticky-top shadow-sm">
         <div className="container-fluid">
           <a className="navbar-brand fw-bold text-dark fs-4" href="#inicio" onClick={(e) => { e.preventDefault(); scrollToSection('inicio'); }}>
@@ -292,10 +282,10 @@ function App() {
         </div>
       </nav>
 
-      {/* CONTENIDO PRINCIPAL EN UNA SOLA VISTA DESLIZABLE */}
+
       <div className="flex-grow-1">
         
-        {/* APARTADO 1: INICIO */}
+
         <section id="inicio" className="position-relative text-white text-center d-flex align-items-center justify-content-center" style={{ minHeight: '90vh', background: 'linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url("https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1500&q=80") center/cover no-repeat' }}>
           <div className="container px-3">
             <h1 className="display-3 fw-bold mb-4">Seguridad y Control Inteligente</h1>
@@ -308,7 +298,6 @@ function App() {
           </div>
         </section>
 
-        {/* APARTADO 2: ¿PARA QUÉ FUNCIONA? */}
         <section id="funciones" className="container py-5 my-5">
           <div className="text-center mb-5">
             <h2 className="fw-bold text-dark display-5">¿Para qué funciona CentralGuard?</h2>
@@ -354,7 +343,7 @@ function App() {
           </div>
         </section>
 
-        {/* APARTADO 3: CONTÁCTENOS */}
+
         <section id="contacto" className="py-5 bg-light border-top">
           <div className="container my-3" style={{ maxWidth: '600px' }}>
             <div className="card shadow border-0 p-5 bg-white">
@@ -381,12 +370,11 @@ function App() {
 
       </div>
 
-      {/* FOOTER */}
+
       <footer className="bg-dark text-white text-center py-4 mt-auto">
         <p className="mb-0 small text-muted">© 2026 CentralGuard - Sistema de Control y Seguridad Operativa. Todos los derechos reservados.</p>
       </footer>
 
-      {/* MODAL DE INICIO DE SESIÓN */}
       {mostrarModalLogin && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -419,7 +407,7 @@ function App() {
         </div>
       )}
 
-      {/* MODAL DE REGISTRO */}
+
       {mostrarModalRegistro && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
