@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentinelApp — Sistema Inteligente de Seguridad</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #04060f;
+  --panel: #0d1220;
+  --card: #111827;
+  --border: #1e2d4a;
+  --accent: #00d4ff;
+  --accent2: #0066cc;
+  --success: #00e676;
+  --danger: #ff1744;
+  --warning: #ffc107;
+  --text: #e2e8f0;
+  --muted: #64748b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* GRID BG */
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,150,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,150,255,0.015) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;animation:gridMove 25s linear infinite;}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:48px 48px}}
+
+/* ===== PANTALLAS ===== */
+.screen{display:none;position:relative;z-index:1;min-height:100vh;animation:fadeIn 0.35s ease;}
+.screen.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ==================== LOGIN ==================== */
+#s-login{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+#s-login::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(0,100,255,0.12) 0%,transparent 65%);pointer-events:none;z-index:0;}
+
+.login-box{width:100%;max-width:400px;background:linear-gradient(160deg,#060c1f,#0a1530);border:1px solid rgba(0,130,255,0.25);border-radius:24px;padding:48px 36px;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,100,255,0.12),inset 0 1px 0 rgba(0,180,255,0.08);}
+.login-box::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#00aaff,#00d4ff,#00aaff,transparent);filter:blur(1px);}
+.login-logo{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:36px;}
+.login-shield{width:64px;height:75px;filter:drop-shadow(0 0 10px rgba(0,212,255,0.7));animation:shieldGlow 2.5s ease-in-out infinite;}
+@keyframes shieldGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(0,212,255,0.7))}50%{filter:drop-shadow(0 0 16px rgba(0,230,255,1))}}
+.login-title{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;color:#e8f4ff;letter-spacing:-1px;}
+.login-title span{color:var(--accent);text-shadow:0 0 14px rgba(0,212,255,0.9);}
+.login-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(0,180,255,0.5);letter-spacing:4px;}
+
+.input-group{margin-bottom:14px;}
+.input-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,180,255,0.5);letter-spacing:3px;margin-bottom:6px;display:block;}
+.input-field{width:100%;background:rgba(0,30,80,0.4);border:1px solid rgba(0,212,255,0.2);border-radius:10px;padding:12px 16px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.input-field:focus{border-color:rgba(0,212,255,0.5);box-shadow:0 0 14px rgba(0,212,255,0.1);}
+
+.role-select{width:100%;background:rgba(0,30,80,0.4);border:1px solid rgba(0,212,255,0.2);border-radius:10px;padding:12px 16px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;outline:none;cursor:pointer;appearance:none;}
+.role-select option{background:#0a1530;}
+
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,rgba(0,100,200,0.4),rgba(0,212,255,0.2));border:1px solid rgba(0,212,255,0.4);border-radius:12px;color:var(--accent);font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.25s;margin-top:8px;}
+.btn-login:hover{background:linear-gradient(135deg,rgba(0,120,220,0.5),rgba(0,212,255,0.3));box-shadow:0 0 20px rgba(0,212,255,0.2);}
+
+.login-error{background:rgba(255,23,68,0.1);border:1px solid rgba(255,23,68,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:#ff6680;margin-top:10px;display:none;text-align:center;}
+
+/* ==================== APP SHELL ==================== */
+#s-app{flex-direction:column;width:100%;}
+
+.topbar{position:sticky;top:0;z-index:200;background:rgba(4,6,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:#e8f4ff;}
+.topbar-logo span{color:var(--accent);text-shadow:0 0 10px rgba(0,212,255,0.7);}
+.topbar-role{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,180,255,0.4);letter-spacing:3px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.15);border-radius:4px;padding:3px 8px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.alert-badge{position:relative;cursor:pointer;}
+.alert-bell{font-size:20px;color:var(--muted);transition:color 0.2s;}
+.alert-bell:hover{color:var(--accent);}
+.alert-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 6px var(--danger);animation:pulse 1.5s infinite;}
+.live-indicator{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--success);}
+.live-dot-el{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.topbar-user{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(0,212,255,0.15);border:1.5px solid rgba(0,212,255,0.35);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);}
+.logout-btn{background:rgba(255,23,68,0.1);border:1px solid rgba(255,23,68,0.25);color:#ff4466;border-radius:7px;padding:5px 12px;font-size:11px;cursor:pointer;font-family:'Share Tech Mono',monospace;letter-spacing:1px;transition:all 0.2s;}
+.logout-btn:hover{background:rgba(255,23,68,0.2);}
+
+/* NAV */
+.nav-bar{background:rgba(8,12,28,0.95);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto;}
+.nav-btn{padding:12px 16px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.nav-btn:hover{color:var(--text);}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* CONTENT */
+.app-content{flex:1;padding:24px 20px;max-width:1200px;margin:0 auto;width:100%;}
+
+/* CARDS */
+.card{background:linear-gradient(145deg,#0d1220,#111827);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.3),transparent);}
+.card-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:2px;margin-bottom:4px;}
+.card-sub{font-size:11px;color:var(--muted);margin-bottom:16px;font-family:'Share Tech Mono',monospace;}
+
+/* GRID LAYOUTS */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+@media(max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr);}.grid-4{grid-template-columns:repeat(2,1fr);}}
+
+/* STAT CARDS */
+.stat-card{background:linear-gradient(145deg,#0a1220,#0d1828);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:transform 0.2s,box-shadow 0.2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.08);}
+.stat-num{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;line-height:1;}
+.stat-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:6px;}
+
+/* BADGES */
+.badge{padding:3px 10px;border-radius:5px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;display:inline-block;}
+.badge-green{background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.3);color:var(--success);}
+.badge-red{background:rgba(255,23,68,0.12);border:1px solid rgba(255,23,68,0.3);color:#ff4466;}
+.badge-yellow{background:rgba(255,193,7,0.12);border:1px solid rgba(255,193,7,0.3);color:var(--warning);}
+.badge-blue{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);color:var(--accent);}
+
+/* VIGILANT ROWS */
+.agent-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,45,74,0.5);}
+.agent-row:last-child{border-bottom:none;}
+.avatar{width:36px;height:36px;border-radius:50%;background:rgba(0,212,255,0.12);border:1.5px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent);flex-shrink:0;}
+.avatar.danger{border-color:rgba(255,23,68,0.4);color:#ff4466;background:rgba(255,23,68,0.08);}
+.agent-info{flex:1;}
+.agent-name{font-size:13px;font-weight:600;color:var(--text);}
+.agent-detail{font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-primary{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.4);color:var(--accent);}
+.btn-primary:hover{background:rgba(0,212,255,0.25);box-shadow:0 0 16px rgba(0,212,255,0.15);}
+.btn-danger{background:rgba(255,23,68,0.12);border:1px solid rgba(255,23,68,0.35);color:#ff4466;}
+.btn-danger:hover{background:rgba(255,23,68,0.22);}
+.btn-success{background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.35);color:var(--success);}
+.btn-success:hover{background:rgba(0,230,118,0.22);}
+.btn-full{width:100%;justify-content:center;}
+
+/* INPUTS */
+.inp{width:100%;background:rgba(0,30,80,0.35);border:1px solid rgba(0,212,255,0.18);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:rgba(0,212,255,0.4);}
+.inp-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,180,255,0.5);letter-spacing:2px;margin-bottom:5px;display:block;}
+.inp-group{margin-bottom:12px;}
+textarea.inp{resize:vertical;min-height:70px;}
+select.inp{cursor:pointer;appearance:none;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:12px;}
+.progress-header{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:5px;}
+.progress-bar{height:5px;border-radius:5px;background:rgba(30,45,74,0.8);}
+.progress-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),#0088ff);transition:width 0.6s ease;}
+.progress-fill.green{background:linear-gradient(90deg,var(--success),#00a854);}
+
+/* MAP */
+.map-area{background:rgba(0,10,30,0.8);border:1px solid rgba(0,212,255,0.15);border-radius:12px;position:relative;overflow:hidden;height:220px;margin-bottom:12px;}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:20px 20px;}
+.map-label{position:absolute;bottom:10px;left:12px;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,180,255,0.4);letter-spacing:2px;}
+.pin{position:absolute;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;}
+.pin::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid;opacity:0.4;animation:ripple 2s infinite;}
+.pin::before{content:attr(data-name);position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:8px;white-space:nowrap;padding:2px 6px;border-radius:4px;pointer-events:none;}
+@keyframes ripple{0%{transform:scale(1);opacity:0.5}100%{transform:scale(3);opacity:0}}
+.pin.green{background:var(--success);box-shadow:0 0 8px var(--success);}
+.pin.green::after{border-color:var(--success);}
+.pin.green::before{background:rgba(0,50,0,0.8);color:var(--success);}
+.pin.blue{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+.pin.blue::after{border-color:var(--accent);}
+.pin.blue::before{background:rgba(0,20,50,0.8);color:var(--accent);}
+.pin.red{background:#ff4466;box-shadow:0 0 10px #ff4466;animation:pinAlert 0.8s infinite;}
+.pin.red::after{border-color:#ff4466;}
+.pin.red::before{background:rgba(50,0,10,0.8);color:#ff4466;}
+@keyframes pinAlert{0%,100%{box-shadow:0 0 10px #ff4466}50%{box-shadow:0 0 22px #ff4466}}
+
+/* CHAT */
+.chat-area{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;margin-bottom:10px;padding-right:4px;}
+.chat-area::-webkit-scrollbar{width:4px;}
+.chat-area::-webkit-scrollbar-track{background:transparent;}
+.chat-area::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.2);border-radius:4px;}
+.chat-msg-wrap{display:flex;gap:8px;align-items:flex-end;}
+.chat-msg-wrap.me{flex-direction:row-reverse;}
+.chat-bubble{padding:8px 12px;border-radius:12px;font-size:12px;max-width:75%;line-height:1.4;color:var(--text);}
+.chat-msg-wrap:not(.me) .chat-bubble{background:rgba(20,30,60,0.7);border:1px solid var(--border);border-bottom-left-radius:4px;}
+.chat-msg-wrap.me .chat-bubble{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.22);border-bottom-right-radius:4px;}
+.chat-time{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;white-space:nowrap;margin-bottom:3px;}
+.chat-sender{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;}
+
+/* QR POINTS */
+.qr-point{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;}
+.qr-point.done{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.2);}
+.qr-point.pend{background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.2);}
+.qr-point.pend:hover{background:rgba(255,193,7,0.12);}
+.qr-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.qr-name{font-size:13px;font-weight:600;color:var(--text);}
+.qr-detail{font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;}
+
+/* PANIC */
+.panic-btn{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,23,68,0.3),rgba(180,0,30,0.5));border:3px solid rgba(255,23,68,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin:20px auto;transition:all 0.2s;box-shadow:0 0 40px rgba(255,23,68,0.25);}
+.panic-btn:hover,.panic-btn.active{box-shadow:0 0 60px rgba(255,23,68,0.6);background:radial-gradient(circle,rgba(255,23,68,0.5),rgba(200,0,40,0.7));transform:scale(1.04);}
+.panic-btn.triggered{animation:panicPulse 0.8s infinite;}
+@keyframes panicPulse{0%,100%{box-shadow:0 0 30px rgba(255,23,68,0.4)}50%{box-shadow:0 0 70px rgba(255,23,68,0.9)}}
+.panic-icon{font-size:52px;line-height:1;}
+.panic-label{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#ff4466;letter-spacing:1px;margin-top:4px;}
+
+/* ALERTS PANEL */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:10px;margin-bottom:8px;}
+.alert-item.crit{background:rgba(255,23,68,0.06);border:1px solid rgba(255,23,68,0.2);}
+.alert-item.warn{background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.2);}
+.alert-item.info{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:2px;}
+.alert-title{font-size:13px;font-weight:600;color:var(--text);}
+.alert-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.alert-time{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px;}
+
+/* TURNOS */
+.clock-display{font-family:'Orbitron',monospace;font-size:42px;font-weight:900;color:var(--accent);text-align:center;text-shadow:0 0 20px rgba(0,212,255,0.5);letter-spacing:2px;margin:12px 0;}
+.clock-date{text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:16px;}
+
+/* REPORTS TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent);text-align:left;padding:8px 12px;border-bottom:1px solid rgba(0,212,255,0.15);}
+td{font-size:12px;color:var(--text);padding:10px 12px;border-bottom:1px solid rgba(30,45,74,0.4);}
+tr:hover td{background:rgba(0,212,255,0.03);}
+
+/* STATS PANEL */
+.stat-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.stat-bar-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);width:90px;flex-shrink:0;}
+.stat-bar-track{flex:1;height:6px;border-radius:4px;background:rgba(30,45,74,0.8);}
+.stat-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),#0088ff);}
+.stat-bar-val{font-family:'Orbitron',monospace;font-size:12px;color:var(--accent);width:30px;text-align:right;flex-shrink:0;}
+
+/* NOTIFICATIONS DROPDOWN */
+.notif-panel{position:absolute;top:50px;right:0;width:320px;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 40px rgba(0,0,0,0.5);z-index:500;display:none;overflow:hidden;}
+.notif-panel.open{display:block;}
+.notif-header{padding:14px 18px;border-bottom:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;}
+.notif-item{padding:12px 18px;border-bottom:1px solid rgba(30,45,74,0.4);cursor:pointer;transition:background 0.2s;}
+.notif-item:hover{background:rgba(0,212,255,0.04);}
+.notif-item:last-child{border-bottom:none;}
+.notif-title{font-size:12px;font-weight:600;color:var(--text);}
+.notif-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--text);}
+.section-title span{color:var(--accent);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 24px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text);z-index:9999;transition:transform 0.3s ease;box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:rgba(0,230,118,0.4);color:var(--success);}
+.toast.danger{border-color:rgba(255,23,68,0.4);color:#ff4466;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:800;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:linear-gradient(145deg,#0d1220,#111827);border:1px solid rgba(0,212,255,0.25);border-radius:20px;padding:28px;width:90%;max-width:440px;position:relative;animation:fadeIn 0.25s ease;}
+.modal-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--accent);letter-spacing:2px;margin-bottom:16px;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--text);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:5px;}
+</style>
+</head>
+<body>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== MODAL QR ==================== -->
+<div class="modal-overlay" id="modal-qr">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-qr')">✕</button>
+    <div class="modal-title">📷 ESCANEAR PUNTO QR</div>
+    <div style="text-align:center;padding:20px 0;">
+      <div style="width:120px;height:120px;margin:0 auto;background:rgba(0,212,255,0.05);border:2px dashed rgba(0,212,255,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:48px;">📷</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:12px;letter-spacing:2px;">Simulando escaneo QR...</div>
+    </div>
+    <div id="qr-target-name" style="text-align:center;font-family:'Orbitron',monospace;font-size:14px;color:var(--accent);margin-bottom:16px;"></div>
+    <button class="btn btn-primary btn-full" onclick="confirmQR()">✅ CONFIRMAR PUNTO</button>
+  </div>
+</div>
+
+<!-- ==================== MODAL NOVEDAD ==================== -->
+<div class="modal-overlay" id="modal-nov">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-nov')">✕</button>
+    <div class="modal-title">📝 NUEVA NOVEDAD</div>
+    <div class="inp-group"><label class="inp-label">TÍTULO DEL INCIDENTE</label><input class="inp" id="nov-title" placeholder="Ej: Puerta forzada sector B..."></div>
+    <div class="inp-group"><label class="inp-label">DESCRIPCIÓN</label><textarea class="inp" id="nov-desc" placeholder="Detalles del evento observado..."></textarea></div>
+    <div class="grid-2" style="gap:10px;margin-bottom:12px;">
+      <div class="inp-group" style="margin:0;"><label class="inp-label">PRIORIDAD</label>
+        <select class="inp" id="nov-prio">
+          <option value="Alta">🔴 Alta</option>
+          <option value="Media">🟡 Media</option>
+          <option value="Baja">🟢 Baja</option>
+        </select>
+      </div>
+      <div class="inp-group" style="margin:0;"><label class="inp-label">SECTOR</label>
+        <select class="inp" id="nov-sector">
+          <option>Entrada Principal</option>
+          <option>Sector A</option>
+          <option>Sector B</option>
+          <option>Piso 1</option>
+          <option>Piso 2</option>
+          <option>Bodega</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveNovedad()">💾 GUARDAR NOVEDAD</button>
+  </div>
+</div>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="s-login" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg class="login-shield" viewBox="0 0 58 68" fill="none">
+        <path d="M29 2L4 13V33C4 48 15.5 61.5 29 66C42.5 61.5 54 48 54 33V13L29 2Z" fill="url(#sg)" stroke="url(#ss)" stroke-width="1.5"/>
+        <ellipse cx="29" cy="32" rx="10" ry="6.5" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+        <circle cx="29" cy="32" r="4" fill="url(#eg)"/>
+        <circle cx="29" cy="32" r="1.5" fill="#00d4ff" opacity="0.9"/>
+        <line x1="14" y1="26" x2="44" y2="26" stroke="#00a0ff" stroke-width="0.5" opacity="0.4"/>
+        <line x1="14" y1="38" x2="44" y2="38" stroke="#00a0ff" stroke-width="0.5" opacity="0.4"/>
+        <defs>
+          <linearGradient id="sg" x1="29" y1="2" x2="29" y2="66" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0d2a6e"/><stop offset="100%" stop-color="#061540"/></linearGradient>
+          <linearGradient id="ss" x1="0" y1="0" x2="58" y2="68" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="50%" stop-color="#0088ff"/><stop offset="100%" stop-color="#0044cc"/></linearGradient>
+          <radialGradient id="eg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00a0ff"/><stop offset="100%" stop-color="#003388"/></radialGradient>
+        </defs>
+      </svg>
+      <div class="login-title">Sentinel<span>App</span></div>
+      <div class="login-sub">SISTEMA DE SEGURIDAD</div>
+    </div>
+
+    <div class="inp-group"><label class="inp-label">CORREO ELECTRÓNICO</label><input class="input-field" id="login-email" type="email" placeholder="usuario@sentinelapp.co" value="admin@sentinel.co"></div>
+    <div class="inp-group"><label class="inp-label">CONTRASEÑA</label><input class="input-field" id="login-pass" type="password" placeholder="••••••••" value="1234"></div>
+    <div class="inp-group">
+      <label class="inp-label">ROL DE ACCESO</label>
+      <select class="role-select" id="login-role">
+        <option value="admin">👤 Administrador</option>
+        <option value="supervisor">🔍 Supervisor</option>
+        <option value="vigilante">🛡️ Vigilante</option>
+      </select>
+    </div>
+    <div class="login-error" id="login-error">Credenciales inválidas. Intente nuevamente.</div>
+    <button class="btn-login" onclick="doLogin()">🔐 INGRESAR AL SISTEMA</button>
+    <div style="text-align:center;margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,130,255,0.3);letter-spacing:3px;">SESIÓN CIFRADA · SSL/TLS</div>
+  </div>
+</div>
+
+<!-- ==================== APP ==================== -->
+<div id="s-app" class="screen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div style="font-size:22px;">🛡️</div>
+      <div class="topbar-logo">Sentinel<span>App</span></div>
+      <div class="topbar-role" id="tb-role">ADMIN</div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-indicator"><div class="live-dot-el"></div>EN VIVO</div>
+      <div class="alert-badge" onclick="toggleNotif()">
+        <div class="alert-bell">🔔</div>
+        <div class="alert-dot" id="alert-dot"></div>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-header">🔔 NOTIFICACIONES</div>
+          <div class="notif-item">
+            <div class="notif-title">🚨 Alerta de pánico — M. García</div>
+            <div class="notif-desc">Sector B, hace 3 minutos</div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-title">⚠️ Ronda incompleta — L. Pineda</div>
+            <div class="notif-desc">Sector bodega sin cubrir</div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-title">✅ Turno registrado — C. Mejía</div>
+            <div class="notif-desc">Entrada confirmada 06:02</div>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-user">
+        <div class="user-avatar" id="tb-avatar">AD</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);" id="tb-name">Admin</div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">SALIR</button>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-bar" id="main-nav">
+    <button class="nav-btn active" onclick="showPage('dashboard',this)">📊 DASHBOARD</button>
+    <button class="nav-btn" onclick="showPage('mapa',this)">📍 MAPA GPS</button>
+    <button class="nav-btn" onclick="showPage('turnos',this)">🕐 TURNOS</button>
+    <button class="nav-btn" onclick="showPage('rondas',this)">📷 RONDAS QR</button>
+    <button class="nav-btn" onclick="showPage('novedades',this)">📝 NOVEDADES</button>
+    <button class="nav-btn" onclick="showPage('chat',this)">💬 CHAT</button>
+    <button class="nav-btn" onclick="showPage('panico',this)">🚨 PÁNICO</button>
+    <button class="nav-btn admin-only" onclick="showPage('stats',this)">📈 ESTADÍSTICAS</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="app-content">
+
+    <!-- ====== DASHBOARD ====== -->
+    <div id="p-dashboard" class="page-content">
+      <div class="section-hdr">
+        <div class="section-title">Panel <span>Central</span></div>
+        <div class="live-indicator"><div class="live-dot-el"></div><span id="dash-clock" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--success);"></span></div>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-num" style="color:var(--accent)">18</div><div class="stat-lbl">VIGILANTES</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--success)" id="stat-rondas">94%</div><div class="stat-lbl">RONDAS HOY</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--warning)" id="stat-nov">7</div><div class="stat-lbl">NOVEDADES</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--danger)" id="stat-alerta">1</div><div class="stat-lbl">ALERTAS</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">EQUIPO EN TURNO</div>
+          <div class="card-sub">ESTADO EN TIEMPO REAL</div>
+          <div id="agent-list">
+            <div class="agent-row"><div class="avatar">CM</div><div class="agent-info"><div class="agent-name">Carlos Mejía</div><div class="agent-detail">📍 Entrada Principal</div></div><span class="badge badge-green">ACTIVO</span></div>
+            <div class="agent-row"><div class="avatar">LP</div><div class="agent-info"><div class="agent-name">Laura Pineda</div><div class="agent-detail">📍 Piso 2 Norte</div></div><span class="badge badge-blue">RONDA</span></div>
+            <div class="agent-row"><div class="avatar danger">MG</div><div class="agent-info"><div class="agent-name">Mario García</div><div class="agent-detail">⚠️ Sector B — Sin señal</div></div><span class="badge badge-red">ALERTA</span></div>
+            <div class="agent-row"><div class="avatar">AH</div><div class="agent-info"><div class="agent-name">Andrea Herrera</div><div class="agent-detail">📍 Bodega Norte</div></div><span class="badge badge-green">ACTIVO</span></div>
+            <div class="agent-row"><div class="avatar">JR</div><div class="agent-info"><div class="agent-name">Juan Restrepo</div><div class="agent-detail">📍 Sector C</div></div><span class="badge badge-blue">RONDA</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">ALERTAS RECIENTES</div>
+          <div class="card-sub">ÚLTIMOS EVENTOS</div>
+          <div id="alerts-list">
+            <div class="alert-item crit"><div class="alert-icon">🚨</div><div><div class="alert-title">Botón de pánico — M. García</div><div class="alert-desc">Sector B, piso 1 — GPS: 4.71°N</div><div class="alert-time">Hace 3 min</div></div></div>
+            <div class="alert-item warn"><div class="alert-icon">⚠️</div><div><div class="alert-title">Ronda incompleta — L. Pineda</div><div class="alert-desc">Sector bodega sin registrar</div><div class="alert-time">Hace 18 min</div></div></div>
+            <div class="alert-item info"><div class="alert-icon">ℹ️</div><div><div class="alert-title">Turno iniciado — A. Herrera</div><div class="alert-desc">Bodega Norte — Registro GPS ok</div><div class="alert-time">Hace 32 min</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MAPA GPS ====== -->
+    <div id="p-mapa" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Mapa <span>GPS</span></div>
+        <div class="live-indicator"><div class="live-dot-el"></div>GPS ACTIVO</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">UBICACIÓN EN TIEMPO REAL</div>
+        <div class="card-sub">VIGILANTES EN CAMPO</div>
+        <div class="map-area" id="live-map">
+          <div class="map-grid"></div>
+          <div class="pin green" data-name="C.Mejía" style="left:28%;top:42%"></div>
+          <div class="pin blue" data-name="L.Pineda" style="left:54%;top:28%"></div>
+          <div class="pin red" data-name="M.García" style="left:68%;top:62%"></div>
+          <div class="pin green" data-name="A.Herrera" style="left:38%;top:72%"></div>
+          <div class="pin blue" data-name="J.Restrepo" style="left:76%;top:38%"></div>
+          <div class="map-label">📡 GPS LIVE · Bogotá, Colombia</div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:14px;">
+          <span style="font-size:11px;color:var(--success)">● Activo</span>
+          <span style="font-size:11px;color:var(--accent)">● En Ronda</span>
+          <span style="font-size:11px;color:#ff4466">● Alerta</span>
+        </div>
+        <div class="grid-2">
+          <div class="agent-row"><div class="avatar">CM</div><div class="agent-info"><div class="agent-name">Carlos Mejía</div><div class="agent-detail">4.7108° N, 74.0723° W</div></div><span class="badge badge-green">●</span></div>
+          <div class="agent-row"><div class="avatar">LP</div><div class="agent-info"><div class="agent-name">Laura Pineda</div><div class="agent-detail">4.7114° N, 74.0710° W</div></div><span class="badge badge-blue">●</span></div>
+          <div class="agent-row"><div class="avatar danger">MG</div><div class="agent-info"><div class="agent-name">Mario García</div><div class="agent-detail">4.7098° N, 74.0698° W</div></div><span class="badge badge-red">⚠</span></div>
+          <div class="agent-row"><div class="avatar">AH</div><div class="agent-info"><div class="agent-name">Andrea Herrera</div><div class="agent-detail">4.7092° N, 74.0715° W</div></div><span class="badge badge-green">●</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== TURNOS ====== -->
+    <div id="p-turnos" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Registro de <span>Turno</span></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">CONTROL DE TURNO</div>
+          <div class="card-sub">GEOLOCALIZACIÓN AUTOMÁTICA</div>
+          <div class="clock-display" id="turno-clock">--:--:--</div>
+          <div class="clock-date" id="turno-date">Cargando...</div>
+          <div class="inp-group"><label class="inp-label">PUESTO DE GUARDIA</label>
+            <select class="inp" id="turno-puesto">
+              <option>Entrada Principal — Edificio A</option>
+              <option>Sector B — Bodega</option>
+              <option>Piso 1 — Norte</option>
+              <option>Piso 2 — Sur</option>
+              <option>Sector C — Parking</option>
+            </select>
+          </div>
+          <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.12);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">
+            📡 GPS: <span id="gps-coords" style="color:var(--accent);">4.7110° N, 74.0721° W</span>
+          </div>
+          <div class="grid-2" style="gap:10px;">
+            <button class="btn btn-success btn-full" id="btn-entrada" onclick="registrarTurno('entrada')">🟢 REGISTRAR ENTRADA</button>
+            <button class="btn btn-danger btn-full" id="btn-salida" onclick="registrarTurno('salida')">🔴 REGISTRAR SALIDA</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">HISTORIAL DE TURNOS</div>
+          <div class="card-sub">REGISTROS DEL DÍA</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>HORA</th><th>TIPO</th><th>PUESTO</th><th>ESTADO</th></tr></thead>
+              <tbody id="turnos-tbody">
+                <tr><td>06:00</td><td>Entrada</td><td>Entrada Principal</td><td><span class="badge badge-green">OK</span></td></tr>
+                <tr><td>14:02</td><td>Salida</td><td>Entrada Principal</td><td><span class="badge badge-blue">OK</span></td></tr>
+                <tr><td>14:05</td><td>Entrada</td><td>Sector B</td><td><span class="badge badge-green">OK</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== RONDAS QR ====== -->
+    <div id="p-rondas" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Rondas <span>QR</span></div>
+        <button class="btn btn-primary" onclick="openQRModal()">📷 ESCANEAR</button>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">PROGRESO DEL TURNO</div>
+          <div class="card-sub">PUNTOS DE CONTROL</div>
+          <div class="progress-wrap" style="margin-bottom:20px;">
+            <div class="progress-header"><span>Rondas completadas</span><span id="qr-progress-text">4/6 puntos</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="qr-progress-bar" style="width:67%"></div></div>
+          </div>
+          <div id="qr-points">
+            <div class="qr-point done" id="qrp-0"><div class="qr-icon">✅</div><div><div class="qr-name">Entrada Principal</div><div class="qr-detail">22:05 · C. Mejía</div></div></div>
+            <div class="qr-point done" id="qrp-1"><div class="qr-icon">✅</div><div><div class="qr-name">Piso 1 — Norte</div><div class="qr-detail">22:18 · L. Pineda</div></div></div>
+            <div class="qr-point done" id="qrp-2"><div class="qr-icon">✅</div><div><div class="qr-name">Sector A</div><div class="qr-detail">22:30 · A. Herrera</div></div></div>
+            <div class="qr-point done" id="qrp-3"><div class="qr-icon">✅</div><div><div class="qr-name">Piso 2 — Sur</div><div class="qr-detail">22:44 · J. Restrepo</div></div></div>
+            <div class="qr-point pend" id="qrp-4" onclick="openQRModal(4)"><div class="qr-icon">⏳</div><div><div class="qr-name">Sector B — Bodega</div><div class="qr-detail" style="color:var(--warning);">Pendiente — Toca aquí</div></div></div>
+            <div class="qr-point pend" id="qrp-5" onclick="openQRModal(5)"><div class="qr-icon">⏳</div><div><div class="qr-name">Parking Norte</div><div class="qr-detail" style="color:var(--warning);">Pendiente — Toca aquí</div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">RESUMEN DE RONDAS HOY</div>
+          <div class="card-sub">TODOS LOS VIGILANTES</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>VIGILANTE</th><th>COMPLETADAS</th><th>TOTAL</th><th>%</th></tr></thead>
+              <tbody>
+                <tr><td>L. Pineda</td><td>19</td><td>20</td><td><span class="badge badge-green">95%</span></td></tr>
+                <tr><td>C. Mejía</td><td>16</td><td>20</td><td><span class="badge badge-green">80%</span></td></tr>
+                <tr><td>A. Herrera</td><td>14</td><td>20</td><td><span class="badge badge-blue">70%</span></td></tr>
+                <tr><td>J. Restrepo</td><td>12</td><td>20</td><td><span class="badge badge-yellow">60%</span></td></tr>
+                <tr><td>M. García</td><td>4</td><td>20</td><td><span class="badge badge-red">20%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== NOVEDADES ====== -->
+    <div id="p-novedades" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Reporte de <span>Novedades</span></div>
+        <button class="btn btn-primary" onclick="openModal('modal-nov')">+ NUEVA NOVEDAD</button>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">NOVEDADES ACTIVAS</div>
+        <div class="card-sub">INCIDENTES REGISTRADOS HOY</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>HORA</th><th>TÍTULO</th><th>SECTOR</th><th>PRIORIDAD</th><th>ESTADO</th></tr></thead>
+            <tbody id="nov-tbody">
+              <tr><td style="font-family:'Share Tech Mono',monospace">22:47</td><td>Cámara apagada — Sin imagen</td><td>Sector B</td><td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-red">SIN RES.</span></td></tr>
+              <tr><td style="font-family:'Share Tech Mono',monospace">21:30</td><td>Puerta entreabierta bodega</td><td>Bodega Norte</td><td><span class="badge badge-yellow">Media</span></td><td><span class="badge badge-yellow">REVISIÓN</span></td></tr>
+              <tr><td style="font-family:'Share Tech Mono',monospace">20:15</td><td>Persona sospechosa parking</td><td>Parking</td><td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-blue">ATENDIDA</span></td></tr>
+              <tr><td style="font-family:'Share Tech Mono',monospace">19:00</td><td>Luz de emergencia fundida</td><td>Piso 1</td><td><span class="badge badge-green">Baja</span></td><td><span class="badge badge-blue">ATENDIDA</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== CHAT ====== -->
+    <div id="p-chat" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Chat <span>Interno</span></div>
+        <div class="live-indicator"><div class="live-dot-el"></div>EN LÍNEA</div>
+      </div>
+      <div class="grid-2">
+        <div class="card" style="height:fit-content;">
+          <div class="card-title">CANALES</div>
+          <div style="display:flex;flex-direction:column;gap:4px;" id="chat-channels">
+            <div class="agent-row" style="cursor:pointer;padding:8px;border-radius:8px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);" onclick="selectChannel('general',this)">
+              <div class="avatar" style="width:30px;height:30px;font-size:10px;">📢</div>
+              <div class="agent-info"><div class="agent-name" style="font-size:12px;">Canal General</div><div class="agent-detail">Todos los vigilantes</div></div>
+            </div>
+            <div class="agent-row" style="cursor:pointer;padding:8px;border-radius:8px;" onclick="selectChannel('cm',this)">
+              <div class="avatar" style="width:30px;height:30px;font-size:10px;">CM</div>
+              <div class="agent-info"><div class="agent-name" style="font-size:12px;">Carlos Mejía</div><div class="agent-detail">Activo hace 2 min</div></div>
+            </div>
+            <div class="agent-row" style="cursor:pointer;padding:8px;border-radius:8px;" onclick="selectChannel('lp',this)">
+              <div class="avatar" style="width:30px;height:30px;font-size:10px;">LP</div>
+              <div class="agent-info"><div class="agent-name" style="font-size:12px;">Laura Pineda</div><div class="agent-detail">Activo hace 5 min</div></div>
+            </div>
+            <div class="agent-row" style="cursor:pointer;padding:8px;border-radius:8px;" onclick="selectChannel('mg',this)">
+              <div class="avatar danger" style="width:30px;height:30px;font-size:10px;">MG</div>
+              <div class="agent-info"><div class="agent-name" style="font-size:12px;">Mario García</div><div class="agent-detail" style="color:#ff4466;">⚠️ En alerta</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="display:flex;flex-direction:column;">
+          <div class="card-title" id="chat-channel-name">📢 Canal General</div>
+          <div class="card-sub">MENSAJES EN TIEMPO REAL</div>
+          <div class="chat-area" id="chat-messages">
+            <div class="chat-msg-wrap">
+              <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">MG</div>
+              <div><div class="chat-sender">M. García · 22:44</div><div class="chat-bubble">Sector B sin visibilidad, cámaras apagadas.</div></div>
+            </div>
+            <div class="chat-msg-wrap me">
+              <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;" id="my-chat-avatar">AD</div>
+              <div><div class="chat-sender" style="text-align:right;">Tú · 22:45</div><div class="chat-bubble">Mantente en posición, activando monitoreo de respaldo.</div></div>
+            </div>
+            <div class="chat-msg-wrap">
+              <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">LP</div>
+              <div><div class="chat-sender">L. Pineda · 22:46</div><div class="chat-bubble">Ronda piso 3 completada. Sin novedades adicionales.</div></div>
+            </div>
+            <div class="chat-msg-wrap">
+              <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">CM</div>
+              <div><div class="chat-sender">C. Mejía · 22:47</div><div class="chat-bubble">Entrada principal despejada. Visitante salió hace 10 min.</div></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:auto;">
+            <input class="inp" id="chat-input" placeholder="Escribe un mensaje..." style="flex:1;" onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="btn btn-primary" onclick="sendMsg()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== PÁNICO ====== -->
+    <div id="p-panico" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title" style="color:var(--danger);">🚨 Botón de <span style="color:#ff4466;">Pánico</span></div>
+      </div>
+      <div class="grid-2">
+        <div class="card" style="text-align:center;">
+          <div class="card-title" style="color:#ff4466;">ALERTA DE EMERGENCIA</div>
+          <div class="card-sub">PRESIONAR EN CASO DE PELIGRO INMEDIATO</div>
+          <div class="panic-btn" id="panic-btn" onclick="triggerPanic()">
+            <div class="panic-icon">🆘</div>
+            <div class="panic-label">PÁNICO</div>
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;">📡 GPS LISTO · SE ENVIARÁ UBICACIÓN EXACTA</div>
+          <div style="background:rgba(255,23,68,0.04);border:1px solid rgba(255,23,68,0.15);border-radius:10px;padding:14px;text-align:left;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,100,120,0.7);margin-bottom:8px;letter-spacing:2px;">REGISTRO DE ALERTAS</div>
+            <div id="panic-log">
+              <div style="font-size:11px;color:var(--muted);padding:4px 0;border-bottom:1px solid rgba(255,23,68,0.1);">[22:47] 🚨 ALERTA ACTIVA — M. García · Sector B</div>
+              <div style="font-size:11px;color:var(--muted);padding:4px 0;">[22:31] ✅ Sistema listo. Sin alertas previas.</div>
+            </div>
+          </div>
+          <button class="btn btn-success btn-full" style="margin-top:12px;" onclick="clearPanic()">✅ MARCAR ALERTA COMO ATENDIDA</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">ALERTAS ACTIVAS</div>
+          <div class="card-sub">SUPERVISORES EN COPIA</div>
+          <div id="panic-alerts">
+            <div class="alert-item crit">
+              <div class="alert-icon">🚨</div>
+              <div style="flex:1;">
+                <div class="alert-title">M. García — PÁNICO ACTIVO</div>
+                <div class="alert-desc">Sector B, Piso 1</div>
+                <div class="alert-desc">📡 4.7098° N, 74.0698° W</div>
+                <div class="alert-time">Hace 3 minutos</div>
+              </div>
+              <span class="badge badge-red" style="flex-shrink:0;">ACTIVA</span>
+            </div>
+          </div>
+          <div style="background:rgba(0,20,50,0.4);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:10px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:8px;">SUPERVISORES NOTIFICADOS</div>
+            <div class="agent-row"><div class="avatar" style="width:30px;height:30px;font-size:10px;">SR</div><div class="agent-info"><div class="agent-name" style="font-size:12px;">Sup. Rodríguez</div><div class="agent-detail">📱 Notificado · Respondió</div></div><span class="badge badge-green">OK</span></div>
+            <div class="agent-row"><div class="avatar" style="width:30px;height:30px;font-size:10px;">DM</div><div class="agent-info"><div class="agent-name" style="font-size:12px;">Dir. Morales</div><div class="agent-detail">📱 Notificado · En espera</div></div><span class="badge badge-yellow">ESP.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ESTADÍSTICAS ====== -->
+    <div id="p-stats" class="page-content" style="display:none;">
+      <div class="section-hdr">
+        <div class="section-title">Panel <span>Analítico</span></div>
+        <div class="topbar-role">SOLO SUPERVISORES</div>
+      </div>
+      <div class="grid-4" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-num" style="color:var(--success)">94%</div><div class="stat-lbl">CUMPL. RONDAS</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--accent)">4.2m</div><div class="stat-lbl">T. RESPUESTA</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--warning)">7</div><div class="stat-lbl">NOVEDADES</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--danger)">1</div><div class="stat-lbl">PÁNICO</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">CUMPLIMIENTO DE RONDAS</div>
+          <div class="card-sub">TOP VIGILANTES HOY</div>
+          <div class="progress-wrap"><div class="progress-header"><span>L. Pineda</span><span>19/20</span></div><div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>C. Mejía</span><span>16/20</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>A. Herrera</span><span>14/20</span></div><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>J. Restrepo</span><span>12/20</span></div><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>M. García</span><span style="color:var(--danger)">4/20</span></div><div class="progress-bar"><div class="progress-fill" style="width:20%;background:linear-gradient(90deg,var(--danger),#cc0020)"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">MÉTRICAS OPERATIVAS</div>
+          <div class="card-sub">RESUMEN DEL PERÍODO</div>
+          <div class="progress-wrap"><div class="progress-header"><span>Cobertura GPS</span><span>98%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:98%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>Novedades resueltas</span><span>71%</span></div><div class="progress-bar"><div class="progress-fill" style="width:71%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>Asistencia turno</span><span>100%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div></div>
+          <div class="progress-wrap"><div class="progress-header"><span>Alertas atendidas</span><span>80%</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
+          <div style="margin-top:20px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:12px;">NOVEDADES POR TIPO</div>
+            <div class="stat-bar-row"><div class="stat-bar-label">Seguridad</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:60%"></div></div><div class="stat-bar-val">3</div></div>
+            <div class="stat-bar-row"><div class="stat-bar-label">Infraestr.</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:40%"></div></div><div class="stat-bar-val">2</div></div>
+            <div class="stat-bar-row"><div class="stat-bar-label">Emergencia</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:20%;background:linear-gradient(90deg,var(--danger),#aa0020)"></div></div><div class="stat-bar-val">1</div></div>
+            <div class="stat-bar-row"><div class="stat-bar-label">Otros</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:20%;background:linear-gradient(90deg,var(--warning),#cc9900)"></div></div><div class="stat-bar-val">1</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /app-content -->
+</div><!-- /s-app -->
+
+<script>
+// ==================== STATE ====================
+const state = {
+  user: null,
+  role: null,
+  panicActive: false,
+  qrDone: 4,
+  qrTotal: 6,
+  qrTargetIdx: null,
+  chatChannel: 'general',
+  messages: {
+    general: [
+      {from:'MG',name:'M. García',time:'22:44',text:'Sector B sin visibilidad, cámaras apagadas.',me:false},
+      {from:'AD',name:'Tú',time:'22:45',text:'Mantente en posición, activando monitoreo de respaldo.',me:true},
+      {from:'LP',name:'L. Pineda',time:'22:46',text:'Ronda piso 3 completada. Sin novedades adicionales.',me:false},
+      {from:'CM',name:'C. Mejía',time:'22:47',text:'Entrada principal despejada. Visitante salió hace 10 min.',me:false}
+    ],
+    cm: [{from:'CM',name:'C. Mejía',time:'22:10',text:'Todo tranquilo en entrada.',me:false}],
+    lp: [{from:'LP',name:'L. Pineda',time:'22:05',text:'Iniciando ronda piso 1.',me:false}],
+    mg: [{from:'MG',name:'M. García',time:'22:44',text:'Sector B sin visibilidad, cámaras apagadas.',me:false}]
+  },
+  turnos: [],
+  novedades: []
+};
+
+const users = {admin:{pass:'1234',role:'admin',label:'ADMIN',name:'Administrador',initials:'AD'},supervisor:{pass:'1234',role:'supervisor',label:'SUPER',name:'Supervisor',initials:'SR'},vigilante:{pass:'1234',role:'vigilante',label:'VIGIL',name:'Vigilante',initials:'VG'}};
+
+// ==================== AUTH ====================
+function doLogin(){
+  const email=document.getElementById('login-email').value;
+  const pass=document.getElementById('login-pass').value;
+  const role=document.getElementById('login-role').value;
+  const err=document.getElementById('login-error');
+  if(!email||!pass){err.style.display='block';err.textContent='Completa todos los campos.';return;}
+  const u=users[role];
+  if(!u||pass!==u.pass){err.style.display='block';err.textContent='Credenciales inválidas. Intente nuevamente.';return;}
+  err.style.display='none';
+  state.user=u; state.role=role;
+  document.getElementById('tb-role').textContent=u.label;
+  document.getElementById('tb-name').textContent=u.name;
+  document.getElementById('tb-avatar').textContent=u.initials;
+  document.getElementById('my-chat-avatar').textContent=u.initials;
+  if(role==='vigilante'){document.querySelectorAll('.admin-only').forEach(el=>el.style.display='none');}
+  else{document.querySelectorAll('.admin-only').forEach(el=>el.style.display='');}
+  document.getElementById('s-login').classList.remove('active');
+  document.getElementById('s-app').classList.add('active');
+  showPage('dashboard',document.querySelector('.nav-btn'));
+  showToast('✅ Bienvenido, '+u.name,'success');
+  startClocks();
+}
+
+function doLogout(){
+  document.getElementById('s-app').classList.remove('active');
+  document.getElementById('s-login').classList.add('active');
+  showToast('Sesión cerrada correctamente');
+}
+
+// ==================== NAVIGATION ====================
+function showPage(id, btn){
+  document.querySelectorAll('.page-content').forEach(p=>p.style.display='none');
+  document.getElementById('p-'+id).style.display='block';
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  closeNotif();
+}
+
+// ==================== CLOCKS ====================
+function startClocks(){
+  setInterval(()=>{
+    const n=new Date();
+    const t=n.toLocaleTimeString('es-CO',{hour12:false});
+    const dash=document.getElementById('dash-clock');
+    const turno=document.getElementById('turno-clock');
+    const date=document.getElementById('turno-date');
+    if(dash) dash.textContent=t;
+    if(turno) turno.textContent=t;
+    if(date) date.textContent=n.toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  },1000);
+}
+
+// ==================== TURNOS ====================
+function registrarTurno(tipo){
+  const puesto=document.getElementById('turno-puesto').value;
+  const n=new Date();
+  const hora=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const tbody=document.getElementById('turnos-tbody');
+  const tr=document.createElement('tr');
+  const tipo_label=tipo==='entrada'?'Entrada':'Salida';
+  tr.innerHTML=`<td style="font-family:'Share Tech Mono',monospace">${hora}</td><td>${tipo_label}</td><td>${puesto.split('—')[0].trim()}</td><td><span class="badge badge-green">OK</span></td>`;
+  tbody.insertBefore(tr,tbody.firstChild);
+  showToast(`${tipo==='entrada'?'🟢 Entrada':'🔴 Salida'} registrada correctamente a las ${hora}`,'success');
+}
+
+// ==================== QR RONDAS ====================
+let qrTargetName='';
+function openQRModal(idx=null){
+  const names=['Entrada Principal','Piso 1 — Norte','Sector A','Piso 2 — Sur','Sector B — Bodega','Parking Norte'];
+  if(idx===null){
+    // Find first pending
+    for(let i=0;i<6;i++){const p=document.getElementById('qrp-'+i);if(p&&p.classList.contains('pend')){idx=i;break;}}
+  }
+  if(idx===null){showToast('✅ Todos los puntos ya fueron escaneados','success');return;}
+  state.qrTargetIdx=idx;
+  qrTargetName=names[idx]||'Punto '+idx;
+  document.getElementById('qr-target-name').textContent='📍 '+qrTargetName;
+  openModal('modal-qr');
+}
+
+function confirmQR(){
+  const idx=state.qrTargetIdx;
+  const p=document.getElementById('qrp-'+idx);
+  if(!p) return;
+  const n=new Date();
+  const hora=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  p.className='qr-point done';
+  p.innerHTML=`<div class="qr-icon">✅</div><div><div class="qr-name">${qrTargetName}</div><div class="qr-detail">${hora} · ${state.user?.name||'Tú'}</div></div>`;
+  p.onclick=null;
+  state.qrDone++;
+  const pct=Math.round((state.qrDone/state.qrTotal)*100);
+  document.getElementById('qr-progress-bar').style.width=pct+'%';
+  document.getElementById('qr-progress-text').textContent=state.qrDone+'/'+state.qrTotal+' puntos';
+  closeModal('modal-qr');
+  showToast('✅ Punto "'+qrTargetName+'" escaneado correctamente','success');
+}
+
+// ==================== NOVEDADES ====================
+function saveNovedad(){
+  const title=document.getElementById('nov-title').value.trim();
+  const desc=document.getElementById('nov-desc').value.trim();
+  const prio=document.getElementById('nov-prio').value;
+  const sector=document.getElementById('nov-sector').value;
+  if(!title){showToast('⚠️ Ingresa un título para la novedad','danger');return;}
+  const n=new Date();
+  const hora=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const tbody=document.getElementById('nov-tbody');
+  const prioMap={Alta:'badge-red',Media:'badge-yellow',Baja:'badge-green'};
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="font-family:'Share Tech Mono',monospace">${hora}</td><td>${title}</td><td>${sector}</td><td><span class="badge ${prioMap[prio]}">${prio}</span></td><td><span class="badge badge-red">SIN RES.</span></td>`;
+  tbody.insertBefore(tr,tbody.firstChild);
+  const statNov=document.getElementById('stat-nov');
+  statNov.textContent=parseInt(statNov.textContent)+1;
+  document.getElementById('nov-title').value='';
+  document.getElementById('nov-desc').value='';
+  closeModal('modal-nov');
+  showToast('📝 Novedad registrada: "'+title+'"','success');
+}
+
+// ==================== CHAT ====================
+const channelNames={general:'📢 Canal General',cm:'💬 Carlos Mejía',lp:'💬 Laura Pineda',mg:'💬 Mario García'};
+
+function selectChannel(ch, el){
+  state.chatChannel=ch;
+  document.querySelectorAll('#chat-channels .agent-row').forEach(r=>{r.style.background='';r.style.border='none';});
+  el.style.background='rgba(0,212,255,0.06)';
+  el.style.border='1px solid rgba(0,212,255,0.15)';
+  document.getElementById('chat-channel-name').textContent=channelNames[ch]||ch;
+  renderChat();
+}
+
+function renderChat(){
+  const area=document.getElementById('chat-messages');
+  const msgs=state.messages[state.chatChannel]||[];
+  area.innerHTML=msgs.map(m=>`
+    <div class="chat-msg-wrap ${m.me?'me':''}">
+      <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;${m.me?'color:var(--accent);':''}${m.from==='MG'?'border-color:rgba(255,23,68,0.4);color:#ff4466;background:rgba(255,23,68,0.08);':''}">${m.from}</div>
+      <div><div class="chat-sender" style="${m.me?'text-align:right;':''}">${m.name} · ${m.time}</div><div class="chat-bubble">${m.text}</div></div>
+    </div>`).join('');
+  area.scrollTop=area.scrollHeight;
+}
+
+function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const text=inp.value.trim();
+  if(!text) return;
+  const n=new Date();
+  const time=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const initials=state.user?.initials||'AD';
+  const msg={from:initials,name:'Tú',time,text,me:true};
+  if(!state.messages[state.chatChannel]) state.messages[state.chatChannel]=[];
+  state.messages[state.chatChannel].push(msg);
+  inp.value='';
+  renderChat();
+  // Auto reply after 2 seconds
+  const replies={'general':['Recibido, en posición.','Copiado, sobre aviso.','Roger that, procediendo.'],'cm':['Sí señor, ahorita reviso.','Entendido, estoy en ello.'],'lp':['Ok jefe, lo verifico.','Copiado, confirmado.'],'mg':['...','Sigo aquí, sin señal clara.']};
+  const rep=(replies[state.chatChannel]||replies['general']);
+  const replyText=rep[Math.floor(Math.random()*rep.length)];
+  const senders={'general':{from:'CM',name:'C. Mejía'},'cm':{from:'CM',name:'C. Mejía'},'lp':{from:'LP',name:'L. Pineda'},'mg':{from:'MG',name:'M. García'}};
+  const sender=senders[state.chatChannel]||{from:'CM',name:'C. Mejía'};
+  setTimeout(()=>{
+    const t2=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+    state.messages[state.chatChannel].push({...sender,time:t2,text:replyText,me:false});
+    renderChat();
+  },1800);
+}
+
+// ==================== PANIC ====================
+function triggerPanic(){
+  state.panicActive=true;
+  const btn=document.getElementById('panic-btn');
+  btn.classList.add('triggered');
+  const n=new Date();
+  const time=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const name=state.user?.name||'Usuario';
+  const log=document.getElementById('panic-log');
+  log.insertAdjacentHTML('afterbegin',`<div style="font-size:11px;color:#ff4466;padding:4px 0;border-bottom:1px solid rgba(255,23,68,0.15);">[${time}] 🚨 ALERTA ENVIADA — ${name} · GPS: 4.7110° N</div>`);
+  document.getElementById('stat-alerta').textContent=parseInt(document.getElementById('stat-alerta').textContent)+1;
+  showToast('🚨 ¡ALERTA DE PÁNICO ENVIADA! Supervisores notificados.','danger');
+}
+
+function clearPanic(){
+  const btn=document.getElementById('panic-btn');
+  btn.classList.remove('triggered');
+  state.panicActive=false;
+  const n=new Date();
+  const time=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const log=document.getElementById('panic-log');
+  log.insertAdjacentHTML('afterbegin',`<div style="font-size:11px;color:var(--success);padding:4px 0;border-bottom:1px solid rgba(0,230,118,0.15);">[${time}] ✅ Alerta marcada como ATENDIDA</div>`);
+  showToast('✅ Alerta atendida y cerrada','success');
+}
+
+// ==================== MODALS & NOTIFS ====================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+
+function toggleNotif(){document.getElementById('notif-panel').classList.toggle('open');}
+function closeNotif(){document.getElementById('notif-panel').classList.remove('open');}
+document.addEventListener('click',e=>{const np=document.getElementById('notif-panel');if(np&&!np.contains(e.target)&&!e.target.closest('.alert-badge'))closeNotif();});
+
+// ==================== TOAST ====================
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+(type||'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ==================== GPS SIMULATION ====================
+function simulateGPS(){
+  const coords=['4.7108° N, 74.0723° W','4.7110° N, 74.0721° W','4.7112° N, 74.0719° W','4.7109° N, 74.0724° W'];
+  let i=0;
+  setInterval(()=>{
+    const el=document.getElementById('gps-coords');
+    if(el) el.textContent=coords[i%coords.length];
+    i++;
+  },4000);
+}
+
+// ==================== INIT ====================
+window.onload=function(){
+  simulateGPS();
+  // Animate pin positions slightly
+  setInterval(()=>{
+    document.querySelectorAll('.pin').forEach(pin=>{
+      const l=parseFloat(pin.style.left)||30;
+      const t=parseFloat(pin.style.top)||40;
+      pin.style.left=(l+(Math.random()-0.5)*0.3)+'%';
+      pin.style.top=(t+(Math.random()-0.5)*0.3)+'%';
+    });
+  },3000);
+};
+</script>
+</body>
+</html>
