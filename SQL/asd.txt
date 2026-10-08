@@ -1,0 +1,3 @@
+update registro_acceso
+set hora_salida = null
+where idregistro_acceso = 2;
