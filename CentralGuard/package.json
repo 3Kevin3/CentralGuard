@@ -1,0 +1,60 @@
+{
+  "name": "centralguard",
+<<<<<<< HEAD
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "bootstrap": "^5.3.8",
+    "react": "^19.2.8",
+    "react-data-table-component": "^8.10.0",
+    "react-dom": "^19.2.8",
+    "sweetalert2": "^11.26.25"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
+    "vite": "^8.3.0"
+  }
+}
+=======
+  "version": "1.0.0",
+  "description": "centralguard",
+  "keywords": [
+    "node",
+    "express",
+    "multer",
+    "mogoose",
+    "bycrypt",
+    "jwt"
+  ],
+    "contributors": [
+    "Kevin Enciso <kevinencisoe@gmail.com>",
+    "Daniel Reyes <yhesua.1979@gmail.com>",
+    "Angie Fajardo <angiepaolafajardo23@gmail.com>"
+  ],
+  "license": "ISC",
+  "author": "Paula Suárez <cammplss@gmail.com>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js"
+  },
+    "dependencies": {
+    "express": "^5.2.1"
+  }
+}
+>>>>>>> da47840e8020ac686febc390d16411e193a61162
