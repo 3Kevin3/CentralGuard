@@ -1,0 +1,1026 @@
+{
+  "info": {
+    "_postman_id": "0be77b82-2f04-474a-ac8f-630f034e5323",
+    "name": "Novedades",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59091188",
+    "_collection_link": "https://go.postman.co/collection/59091188-0be77b82-2f04-474a-ac8f-630f034e5323?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Por ID",
+      "item": [
+        {
+          "name": "Obtener una novedad por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades",
+                "6adf76b592d22e8c06ad6150"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Obtenido con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf76b592d22e8c06ad6150"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "278"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"116-/a2mNDtm7ZhtBWS3JgnXH2KtQvA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 15:53:31 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6adf76b592d22e8c06ad6150\",\n    \"hora_reporte\": \"14:30:00\",\n    \"descripcion_hechos\": \"Se encontró una puerta abierta en la torre B durante la ronda.\",\n    \"estado\": \"Pendiente\",\n    \"createdAt\": \"2026-10-26T15:50:13.813Z\",\n    \"updatedAt\": \"2026-10-26T15:50:13.813Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad615",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf76b592d22e8c06ad615"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 16:00:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            },
+            {
+              "name": "404 - Novedad no encontrada",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf76b592d22e8c06ad6150"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "51"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"33-81rRVmYeLms6jIAx7gm49Ff1Ch0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 16:01:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Novedad no encontrada\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar una novedad completo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades",
+                "6adf79708dc1fbd1c7827b5f"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado con éxito",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\",\r\n  \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf76b592d22e8c06ad6150"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "277"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"115-swPaCuSi668hsKL5NTnCO8oqtZU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 15:54:47 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6adf76b592d22e8c06ad6150\",\n    \"hora_reporte\": \"14:30:00\",\n    \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\",\n    \"estado\": \"Resuelto\",\n    \"createdAt\": \"2026-10-26T15:50:13.813Z\",\n    \"updatedAt\": \"2026-10-26T15:54:47.738Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5f",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbd1c7827b5f"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "123"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7b-kg8lCUZWzYKX6rum4nuyMCL/9Cs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 16:09:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Faltan campos obligatorios (hora_reporte y descripcion_hechos son requeridos para actualizar)\"\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbd1c7827b5"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 16:10:28 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            },
+            {
+              "name": "404 - Novedad no encontrada",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hora_reporte\": \"12:00:00\",\r\n  \"descripcion_hechos\": \"Prueba de actualización completa con ID inexistente\",\r\n  \"estado\": \"ACTIVO\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbfd1c7827b5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbfd1c7827b5"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "51"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"33-81rRVmYeLms6jIAx7gm49Ff1Ch0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 17:16:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Novedad no encontrada\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Eliminar novedad por ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades",
+                "6adf76b592d22e8c06ad6150"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Eliminado correctamente",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf76b592d22e8c06ad6150",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf76b592d22e8c06ad6150"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "60"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3c-sEFO4dkXh6KXe1WdlsTcVjUcrmg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 15:56:23 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Novedad eliminada correctamente\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualización parcial de novedad",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades",
+                "6adf79708dc1fbd1c7827b5f"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado correctamente",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5f",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbd1c7827b5f"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "279"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"117-LdKBHJaCzxRJxW45NgFA1keWk/c\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:06:52 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6adf79708dc1fbd1c7827b5f\",\n    \"hora_reporte\": \"12-04-2017\",\n    \"descripcion_hechos\": \"Se revisó la puerta en la torre B y se aseguró correctamente.\",\n    \"estado\": \"Resuelto\",\n    \"createdAt\": \"2026-10-26T16:01:52.912Z\",\n    \"updatedAt\": \"2026-10-27T16:06:52.347Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbd1c7827b5"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:08:00 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            },
+            {
+              "name": "404 - Novedad no encontrada",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades/6adf79708dc1fbd1c7827b55",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades",
+                    "6adf79708dc1fbd1c7827b55"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "51"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"33-81rRVmYeLms6jIAx7gm49Ff1Ch0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:08:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Novedad no encontrada\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Crear Novedad",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"hora_reporte\": \"14:30:00\",\r\n  \"descripcion_hechos\": \"Se encontró una puerta abierta en la torre B durante la ronda.\",\r\n  \"estado\": \"Pendiente\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/novedades",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Creado con éxito",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hora_reporte\": \"14:30:00\",\r\n  \"descripcion_hechos\": \"Se encontró una puerta abierta en la torre B durante la ronda.\",\r\n  \"estado\": \"Pendiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "278"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"116-UqxIyJEFOkOqYDJ/yDeTgw/sZRM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 15:50:13 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"hora_reporte\": \"14:30:00\",\n    \"descripcion_hechos\": \"Se encontró una puerta abierta en la torre B durante la ronda.\",\n    \"estado\": \"Pendiente\",\n    \"_id\": \"6adf76b592d22e8c06ad6150\",\n    \"createdAt\": \"2026-10-26T15:50:13.813Z\",\n    \"updatedAt\": \"2026-10-26T15:50:13.813Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hora_reporte\": \"14:30:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "107"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"6b-QPjfYz0L9kBGlCOkY69k8F2p4RU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:09:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Faltan campos obligatorios (hora_reporte y descripcion_hechos son requeridos)\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Obtener todas las novedades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/novedades",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "novedades"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Obtenido con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/novedades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "novedades"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-mBHLfEM2tCTcHOeidYlbkCtv5Sc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 26 Oct 2026 15:52:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"6adf76b592d22e8c06ad6150\",\n      \"hora_reporte\": \"14:30:00\",\n      \"descripcion_hechos\": \"Se encontró una puerta abierta en la torre B durante la ronda.\",\n      \"estado\": \"Pendiente\",\n      \"createdAt\": \"2026-10-26T15:50:13.813Z\",\n      \"updatedAt\": \"2026-10-26T15:50:13.813Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
