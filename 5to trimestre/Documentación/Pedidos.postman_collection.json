@@ -1,0 +1,1117 @@
+{
+  "info": {
+    "_postman_id": "8f2e25e1-e62d-4527-948c-462feafa12b8",
+    "name": "Pedidos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59091188",
+    "_collection_link": "https://go.postman.co/collection/59091188-8f2e25e1-e62d-4527-948c-462feafa12b8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Crear Pedido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Sofia Martinez\",\r\n    \"hora_llegada\": \"11:53\",\r\n    \"estado\": \"Pendiente\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "pedidos"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Sofia Martinez\",\r\n    \"hora_llegada\": \"11:53\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "144"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"90-30Puwa22PpBnJrjFZdjdSU18r9w\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:55:47 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Faltan campos obligatorios (nombre_pedido, descripcion, nombre_destinatario, hora_llegada y estado son requeridos)\"\n}"
+            },
+            {
+              "name": "201 - Creado con éxito",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Sofia Martinez\",\r\n    \"hora_llegada\": \"11:53\",\r\n    \"estado\": \"Pendiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-vjOa7Aa/Nb1iar8aOgutDt60sy8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:56:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"nombre_pedido\": \"Rappi\",\n    \"descripcion\": \"Comida china\",\n    \"nombre_destinatario\": \"Sofia Martinez\",\n    \"hora_llegada\": \"11:53\",\n    \"estado\": \"Pendiente\",\n    \"_id\": \"6ae0d7c78f991bd1d8110b19\",\n    \"createdAt\": \"2026-10-27T16:56:39.600Z\",\n    \"updatedAt\": \"2026-10-27T16:56:39.600Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Obtener todos los pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "pedidos"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Obtenido con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "539"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"21b-YLwxkNg2OebEQzA+bwnePIzgDDo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:57:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"6ae0d7758f991bd1d8110b18\",\n      \"nombre_pedido\": \"Rappi\",\n      \"descripcion\": \"Comida china\",\n      \"nombre_destinatario\": \"Sofia Martinez\",\n      \"hora_llegada\": \"11:53\",\n      \"estado\": \"Pendiente\",\n      \"createdAt\": \"2026-10-27T16:55:17.407Z\",\n      \"updatedAt\": \"2026-10-27T16:55:17.407Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6ae0d7c78f991bd1d8110b19\",\n      \"nombre_pedido\": \"Rappi\",\n      \"descripcion\": \"Comida china\",\n      \"nombre_destinatario\": \"Sofia Martinez\",\n      \"hora_llegada\": \"11:53\",\n      \"estado\": \"Pendiente\",\n      \"createdAt\": \"2026-10-27T16:56:39.600Z\",\n      \"updatedAt\": \"2026-10-27T16:56:39.600Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Por ID",
+      "item": [
+        {
+          "name": "Obtener un pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Obtenido con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b18"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-nfUxI2HeyefedTmssUuMUvz0kmM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:58:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6ae0d7758f991bd1d8110b18\",\n    \"nombre_pedido\": \"Rappi\",\n    \"descripcion\": \"Comida china\",\n    \"nombre_destinatario\": \"Sofia Martinez\",\n    \"hora_llegada\": \"11:53\",\n    \"estado\": \"Pendiente\",\n    \"createdAt\": \"2026-10-27T16:55:17.407Z\",\n    \"updatedAt\": \"2026-10-27T16:55:17.407Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b1"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:59:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            },
+            {
+              "name": "404 - Pedido no encontrado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b11",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b11"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"32-RfrBHHwmB6nP53h4p4pzmL6hNcM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 16:59:23 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Pedido no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar un pedido completo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "pedidos",
+                "6ae0d7758f991bd1d8110b18"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado con éxito",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Maria Martinez\",\r\n    \"hora_llegada\": \"11:53\",\r\n    \"estado\": \"Pendiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b18"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-rxj+PkGOsN9fhk7Z+WaYWLr0AmY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:05:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6ae0d7758f991bd1d8110b18\",\n    \"nombre_pedido\": \"Rappi\",\n    \"descripcion\": \"Comida china\",\n    \"nombre_destinatario\": \"Maria Martinez\",\n    \"hora_llegada\": \"11:53\",\n    \"estado\": \"Pendiente\",\n    \"createdAt\": \"2026-10-27T16:55:17.407Z\",\n    \"updatedAt\": \"2026-10-27T17:05:55.064Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Maria Martinez\",\r\n    \"hora_llegada\": \"11:53\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b18"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "139"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8b-aD2fw2nR3eG/9JbB9QtFP24Op+o\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:00:58 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Para PUT se requieren obligatoriamente nombre_pedido, descripcion, nombre_destinatario, hora_llegada y estado\"\n}"
+            },
+            {
+              "name": "404 - Pedido no encontrado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Maria Martinez\",\r\n    \"hora_llegada\": \"11:53\",\r\n    \"estado\": \"Pendiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b11",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b11"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"32-RfrBHHwmB6nP53h4p4pzmL6hNcM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:01:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Pedido no encontrado\"\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre_pedido\": \"Rappi\",\r\n    \"descripcion\": \"Comida china\",\r\n    \"nombre_destinatario\": \"Maria Martinez\",\r\n    \"hora_llegada\": \"11:53\",\r\n    \"estado\": \"Pendiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b1"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:05:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualización parcial de pedido",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "pedidos",
+                "6ae0d7758f991bd1d8110b15"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b18"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-rxj+PkGOsN9fhk7Z+WaYWLr0AmY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:07:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6ae0d7758f991bd1d8110b18\",\n    \"nombre_pedido\": \"Rappi\",\n    \"descripcion\": \"Comida china\",\n    \"nombre_destinatario\": \"Maria Martinez\",\n    \"hora_llegada\": \"11:53\",\n    \"estado\": \"Pendiente\",\n    \"createdAt\": \"2026-10-27T16:55:17.407Z\",\n    \"updatedAt\": \"2026-10-27T17:05:55.064Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b1"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:09:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            },
+            {
+              "name": "404 - Pedido no encontrado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"estado\": \"Resuelto\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b15",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b15"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"32-RfrBHHwmB6nP53h4p4pzmL6hNcM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:09:29 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Pedido no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Eliminar un pedido por ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "pedidos",
+                "6ae0d7758f991bd1d8110b15"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Eliminado correctamente",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b18",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b18"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-G3RZEKv0An/3LS0nuME103xXaYM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:12:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Pedido eliminado correctamente\"\n}"
+            },
+            {
+              "name": "404 - Pedido no encontrado",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b15",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b15"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"32-RfrBHHwmB6nP53h4p4pzmL6hNcM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:10:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Pedido no encontrado\"\n}"
+            },
+            {
+              "name": "400 - ID no válido",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/pedidos/6ae0d7758f991bd1d8110b1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "6ae0d7758f991bd1d8110b1"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4d-0KiuAydTsstz698V/0YM5/QzdUk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 27 Oct 2026 17:12:31 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"El ID proporcionado no tiene un formato válido\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
