@@ -1,0 +1,1930 @@
+{
+  "info": {
+    "_postman_id": "1cf70dbc-f245-411c-8aa3-97ff62a644f8",
+    "name": "Users",
+    "description": "API REST de CentralGuard para la gestión de usuarios.\n\nBase URL: [http://localhost:3000/api/users](http://localhost:3000/api/users)\n\nAutenticación: JWT. Todas las rutas, excepto \"Crear usuario\" e \"Iniciar sesión\", requieren el header Authorization: Bearer .\n\nCódigos de respuesta: 200 (OK), 201 (creado), 400 (datos inválidos), 401 (no autenticado), 403 (token inválido o expirado), 404 (no encontrado), 500 (error del servidor).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59091188",
+    "_collection_link": "https://go.postman.co/collection/59091188-1cf70dbc-f245-411c-8aa3-97ff62a644f8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Por ID",
+      "item": [
+        {
+          "name": "Obtener todos los usuarios por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "6ad249f5060af2246879110a"
+              ]
+            },
+            "description": "**Obtener usuario por ID:** requiere token Sí.\n\nParámetro: `id` en la URL.\n\nRespuestas: 200, 401, 403, 404"
+          },
+          "response": [
+            {
+              "name": "200 - Obtenido con éxito",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad249f5060af2246879110a"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "289"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"121-n6csKzBVCEmvwhXl7yadWuiAPsc\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:18:14 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"6ad249f5060af2246879110a\",\n    \"correo\": \"paula_nueva@gmail.com\",\n    \"contrasenia\": \"$2b$10$5SFK/oMwnpTqI8P/pn9zF.aFoHiZ7kNfUYDRiI0EjXrtLoj6WhHJO\",\n    \"nombre_completo\": \"Paula Andrea\",\n    \"fecha_creacion\": \"2026-10-16T15:59:49.597Z\",\n    \"apellido\": \"Suarez\",\n    \"nombre\": \"Paula Camila\"\n  }\n}"
+            },
+            {
+              "name": "500 - ID con formato inválido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/abc123",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "abc123"
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "158"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"9e-eXnUWaDwLeedEdDXJ3y/KxEeNn4\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:19:16 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Error al obtener el usuario de BD: Cast to ObjectId failed for value \\\"abc123\\\" (type string) at path \\\"_id\\\" for model \\\"User\\\"\"\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad249f5060af2246879110a"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "93"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"5d-nAs9AmWhVcqdIIxA/Oo02x9K3HM\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:20:35 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Acceso denegado. No se proporcionó un token de autenticación.\"\n}"
+            },
+            {
+              "name": "403 - Token Inválido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad249f5060af2246879110a"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "57"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"39-rLg2YJnQLaG3EbFNRRitvKledZo\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:20:57 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Token inválido o expirado.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Eliminar usuario por ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "6ad249f5060af2246879110a"
+              ]
+            },
+            "description": "**Eliminar:** requiere token Sí.\n\nParámetro: `id` en la URL.\n\nRespuestas: 200, 401, 403, 404"
+          },
+          "response": [
+            {
+              "name": "200 - Eliminado correctamente",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a18ea7d551f9450028ae",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a18ea7d551f9450028ae"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "60"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"3c-sAwDtjII0anhUzDYImIpckBdqZQ\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:21:48 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Usuario eliminado correctamente\"\n}"
+            },
+            {
+              "name": "404 - Usuario no encontrado",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a18ea7d551f9450028ae",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a18ea7d551f9450028ae"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "51"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"33-cSIJwv9qCo4R5AIUicgSQVFsZS0\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:22:40 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Usuario no encontrado\"\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a18ea7d551f9450028ae",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a18ea7d551f9450028ae"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "93"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"5d-nAs9AmWhVcqdIIxA/Oo02x9K3HM\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:23:16 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Acceso denegado. No se proporcionó un token de autenticación.\"\n}"
+            },
+            {
+              "name": "403 - Token inválido",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad249f5060af2246879110a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad249f5060af2246879110a"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "57"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"39-rLg2YJnQLaG3EbFNRRitvKledZo\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:25:49 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Token inválido o expirado.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"correo\": \"prueba1234@gmail.com\",\r\n  \"contrasenia\": \"123\",\r\n  \"nombre\": \"prueba\",\r\n\"apellido\": \"123\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "**Crear usuario:** requiere token No.\n\nBody: `correo`, `contrasenia`, `nombre`, `apellido`.\n\n{  \n\"correo\": \"\",  \n\"contrasenia\": \"\",  \n\"nombre\": \"\",  \n\"apellido\": \"\"  \n}\n\nRespuestas: 201, 400."
+          },
+          "response": [
+            {
+              "name": "201 - Creado con éxito",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"prueba123@gmail.com\",\r\n  \"contrasenia\": \"123\",\r\n  \"nombre\": \"prueba\",\r\n  \"apellido\": \"123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "287"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"11f-d0XfoxWzdRpqM7OT8BQm7tUWrDg\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:14:54 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Usuario registrado con éxito\",\n  \"data\": {\n    \"correo\": \"prueba123@gmail.com\",\n    \"contrasenia\": \"$2b$10$dHd2kw2OsXcU9DybPe9vpu0ieWpz1qBMS27hjKo7EhPoYS3I3vhmm\",\n    \"nombre\": \"prueba\",\n    \"apellido\": \"123\",\n    \"_id\": \"6ad7a18ea7d551f9450028ae\",\n    \"fecha_creacion\": \"2026-10-20T17:14:54.403Z\"\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"prueba1234@gmail.com\",\r\n  \"contrasenia\": \"123\",\r\n  \"nombre\": \"prueba\",\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-security-policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "content-type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "1173"
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:15:59 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>SyntaxError: Expected double-quoted property name in JSON at position 88 (line 5 column 1)<br> &nbsp; &nbsp;at JSON.parse (&lt;anonymous&gt;)<br> &nbsp; &nbsp;at parse (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\types\\json.js:91:21)<br> &nbsp; &nbsp;at C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\read.js:162:18<br> &nbsp; &nbsp;at AsyncResource.runInAsyncScope (node:async_hooks:211:14)<br> &nbsp; &nbsp;at invokeCallback (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:238:16)<br> &nbsp; &nbsp;at done (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:227:7)<br> &nbsp; &nbsp;at IncomingMessage.onEnd (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:287:7)<br> &nbsp; &nbsp;at IncomingMessage.emit (node:events:518:28)<br> &nbsp; &nbsp;at endReadableNT (node:internal/streams/readable:1698:12)<br> &nbsp; &nbsp;at process.processTicksAndRejections (node:internal/process/task_queues:90:21)</pre>\n</body>\n</html>\n"
+            }
+          ]
+        },
+        {
+          "name": "Obtener todos los usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "**Obtener todos los usuarios:** requiere token Sí.\n\nRespuestas: 200, 401, 403"
+          },
+          "response": [
+            {
+              "name": "200 - Lista de usuarios",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "514"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"202-rAqo7zPSyuU6tuz8Skd3cR610WQ\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 16:59:51 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"6ad249f5060af2246879110a\",\n      \"correo\": \"paula_nueva@gmail.com\",\n      \"contrasenia\": \"$2b$10$5SFK/oMwnpTqI8P/pn9zF.aFoHiZ7kNfUYDRiI0EjXrtLoj6WhHJO\",\n      \"nombre_completo\": \"Paula Andrea\",\n      \"fecha_creacion\": \"2026-10-16T15:59:49.597Z\",\n      \"apellido\": \"Suarez\",\n      \"nombre\": \"Paula Camila\"\n    },\n    {\n      \"_id\": \"6ad64a22a692d4f5079be197\",\n      \"correo\": \"cammplss@gmail.com\",\n      \"contrasenia\": \"$2b$10$YKPQDEsUJ0HZlq7x4KeQ/.C7ScdZUUKhD7KEAUi2r/aB93yrIVMxq\",\n      \"nombre\": \"Paula\",\n      \"apellido\": \"Suarez\",\n      \"fecha_creacion\": \"2026-10-19T16:49:38.093Z\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "93"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"5d-nAs9AmWhVcqdIIxA/Oo02x9K3HM\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:06:36 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Acceso denegado. No se proporcionó un token de autenticación.\"\n}"
+            },
+            {
+              "name": "403 - Token Inválido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "57"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"39-rLg2YJnQLaG3EbFNRRitvKledZo\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:10:23 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Token inválido o expirado.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar el usuario completo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"correo\": \"definiisiws\",\r\n  \"contrasenia\": \"1234\",\r\n  \"nombre\": \"asd\",\r\n    \"apellido\": \"asd\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "64b7f0c2a1b2c3d4e5f6a7b8"
+              ]
+            },
+            "description": "**Actualizar completo (PUT):** requiere token Sí.\n\nParámetro: `id` en la URL.\n\nBody: los 4 campos.  \n{  \n\"correo\": \"\",  \n\"contrasenia\": \"\",  \n\"nombre\": \"\",  \n\"apellido\": \"\"  \n}\n\nRespuestas: 200, 400, 401, 403, 404"
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"defini\",\r\n  \"contrasenia\": \"123\",\r\n  \"nombre\": \"pru\",\r\n  \"apellido\": \"eba\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "275"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"113-Y/ZqxTFTEXedu2ll0Ruqr14aB1U\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:27:48 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Usuario actualizado correctamente\",\n  \"data\": {\n    \"_id\": \"6ad7a473a7d551f9450028af\",\n    \"correo\": \"defini\",\n    \"contrasenia\": \"$2b$10$ZaxhaK2GINaMY9uv8IlfGOzHImCEJ.5pPonsciBzcBOm8L/uryvr.\",\n    \"nombre\": \"pru\",\n    \"apellido\": \"eba\",\n    \"fecha_creacion\": \"2026-10-20T17:27:15.717Z\"\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"defini\",\r\n  \"contrasenia\": \"123\",\r\n  \"nombre\": \"pru\",\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-security-policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "content-type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "1173"
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:28:24 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>SyntaxError: Expected double-quoted property name in JSON at position 71 (line 5 column 1)<br> &nbsp; &nbsp;at JSON.parse (&lt;anonymous&gt;)<br> &nbsp; &nbsp;at parse (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\types\\json.js:91:21)<br> &nbsp; &nbsp;at C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\read.js:162:18<br> &nbsp; &nbsp;at AsyncResource.runInAsyncScope (node:async_hooks:211:14)<br> &nbsp; &nbsp;at invokeCallback (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:238:16)<br> &nbsp; &nbsp;at done (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:227:7)<br> &nbsp; &nbsp;at IncomingMessage.onEnd (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:287:7)<br> &nbsp; &nbsp;at IncomingMessage.emit (node:events:518:28)<br> &nbsp; &nbsp;at endReadableNT (node:internal/streams/readable:1698:12)<br> &nbsp; &nbsp;at process.processTicksAndRejections (node:internal/process/task_queues:90:21)</pre>\n</body>\n</html>\n"
+            },
+            {
+              "name": "404 - Usuario no encontrado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"definiisiws\",\r\n  \"contrasenia\": \"1234\",\r\n  \"nombre\": \"asd\",\r\n    \"apellido\": \"asd\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "64b7f0c2a1b2c3d4e5f6a7b8"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "51"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"33-cSIJwv9qCo4R5AIUicgSQVFsZS0\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:30:48 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Usuario no encontrado\"\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"definiisiws\",\r\n  \"contrasenia\": \"1234\",\r\n  \"nombre\": \"asd\",\r\n    \"apellido\": \"asd\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "64b7f0c2a1b2c3d4e5f6a7b8"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "93"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"5d-nAs9AmWhVcqdIIxA/Oo02x9K3HM\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:31:23 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Acceso denegado. No se proporcionó un token de autenticación.\"\n}"
+            },
+            {
+              "name": "403 - Token inválido",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"definiisiws\",\r\n  \"contrasenia\": \"1234\",\r\n  \"nombre\": \"asd\",\r\n    \"apellido\": \"asd\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "64b7f0c2a1b2c3d4e5f6a7b8"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "57"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"39-rLg2YJnQLaG3EbFNRRitvKledZo\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:31:43 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Token inválido o expirado.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Actualizar usuario parcialmente",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"pau\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "64b7f0c2a1b2c3d4e5f6a7b8"
+              ]
+            },
+            "description": "**Actualizar parcial (PATCH):** requiere token Sí.\n\nParámetro: `id` en la URL.\n\nBody: solo los campos a cambiar.\n\n{  \n\"nombre\": \"\"  \n}\n\nRespuestas: 200, 400, 401, 403, 404"
+          },
+          "response": [
+            {
+              "name": "200 - Actualizado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Cami\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "275"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"113-2Cg/oZidumh/muPs42FJDPFtZ0s\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:32:53 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Usuario actualizado parcialmente\",\n  \"data\": {\n    \"_id\": \"6ad7a473a7d551f9450028af\",\n    \"correo\": \"defini\",\n    \"contrasenia\": \"$2b$10$ZaxhaK2GINaMY9uv8IlfGOzHImCEJ.5pPonsciBzcBOm8L/uryvr.\",\n    \"nombre\": \"Cami\",\n    \"apellido\": \"eba\",\n    \"fecha_creacion\": \"2026-10-20T17:27:15.717Z\"\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "128"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"80-5pgGXF31uk6WpMvQgNsF0QqnDyw\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:34:01 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Error al actualizar parcialmente el usuario: Validation failed: nombre: Path `nombre` is required.\"\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "93"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"5d-nAs9AmWhVcqdIIxA/Oo02x9K3HM\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:34:48 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Acceso denegado. No se proporcionó un token de autenticación.\"\n}"
+            },
+            {
+              "name": "403 - Token inválido",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/6ad7a473a7d551f9450028af",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "6ad7a473a7d551f9450028af"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "57"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"39-rLg2YJnQLaG3EbFNRRitvKledZo\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:35:40 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Token inválido o expirado.\"\n}"
+            },
+            {
+              "name": "404 - Usuario no encontrado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"pau\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/64b7f0c2a1b2c3d4e5f6a7b8",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "64b7f0c2a1b2c3d4e5f6a7b8"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "51"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"33-cSIJwv9qCo4R5AIUicgSQVFsZS0\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:38:39 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Usuario no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Iniciar sesión",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "   const res = pm.response.json();\r\n   pm.collectionVariables.set(\"token\", res.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"correo\": \"cammplss@gmail.com\",\r\n  \"contrasenia\": \"12123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            },
+            "description": "**Iniciar sesión:** requiere token No.\n\nBody: `correo`, `contrasenia`.\n\nRespuestas: 200, 400, 401"
+          },
+          "response": [
+            {
+              "name": "200 - Inicio de sesión",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"cammplss@gmail.com\",\r\n  \"contrasenia\": \"123123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "364"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"16c-0EeZ0au5/q+JlNoNNnSi3BI0mus\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:39:05 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Inicio de sesión exitoso\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZDY0YTIyYTY5MmQ0ZjUwNzliZTE5NyIsImNvcnJlbyI6ImNhbW1wbHNzQGdtYWlsLmNvbSIsImlhdCI6MTc5MjUxNzk0NSwiZXhwIjoxNzkyNjA0MzQ1fQ.ZMFOa2vWu2PSbwx6dA7MI-TZXLPicYixo_m1g8IPy2c\",\n  \"user\": {\n    \"id\": \"6ad64a22a692d4f5079be197\",\n    \"nombre\": \"Paula\",\n    \"correo\": \"cammplss@gmail.com\"\n  }\n}"
+            },
+            {
+              "name": "400 - Falta de campo obligatorio",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"cammplss@gmail.com\",\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-security-policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "content-type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "1173"
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:39:37 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>SyntaxError: Expected double-quoted property name in JSON at position 38 (line 3 column 1)<br> &nbsp; &nbsp;at JSON.parse (&lt;anonymous&gt;)<br> &nbsp; &nbsp;at parse (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\types\\json.js:91:21)<br> &nbsp; &nbsp;at C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\body-parser\\lib\\read.js:162:18<br> &nbsp; &nbsp;at AsyncResource.runInAsyncScope (node:async_hooks:211:14)<br> &nbsp; &nbsp;at invokeCallback (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:238:16)<br> &nbsp; &nbsp;at done (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:227:7)<br> &nbsp; &nbsp;at IncomingMessage.onEnd (C:\\Users\\SENA\\Desktop\\proyecto cg\\Centralguard\\node_modules\\raw-body\\index.js:287:7)<br> &nbsp; &nbsp;at IncomingMessage.emit (node:events:518:28)<br> &nbsp; &nbsp;at endReadableNT (node:internal/streams/readable:1698:12)<br> &nbsp; &nbsp;at process.processTicksAndRejections (node:internal/process/task_queues:90:21)</pre>\n</body>\n</html>\n"
+            },
+            {
+              "name": "401 - Correo o contraseña incorrectos",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"correo\": \"cammplss@gmail.com\",\r\n  \"contrasenia\": \"12123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/users/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "users",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "access-control-allow-origin",
+                  "value": "*"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "62"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"3e-6a0224U4Pr07G3FlW+6ZUOmtI9Q\""
+                },
+                {
+                  "key": "date",
+                  "value": "Tue, 20 Oct 2026 17:41:28 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Correo o contraseña incorrectos\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
